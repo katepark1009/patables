@@ -12,10 +12,15 @@ export default class Patables extends Component {
       currentPage: this.props.startingPage || 1,
       resultSet: this.props.resultSet || 10,
       totalPages: Math.ceil(this.props.initialData.length / this.props.resultSet),
-      initialData: this.props.initialData || [],
+      initialData: this.props.initialData || [], //! not getting initial Data from App anymore.
       sortColumn: this.props.sortColumn || '',
       sortOrder: this.props.sortOrder || 'asc',
-      pageNeighbors: this.props.pageNeighbors || 2
+      pageNeighbors: this.props.pageNeighbors || 2,
+      url: this.props.url
+      //page
+      //nextPage
+      //previousPage
+      //limit
     }
 
     this.setSearchTerm = this.setSearchTerm.bind(this)
@@ -31,8 +36,42 @@ export default class Patables extends Component {
     this.removeTableData = this.removeTableData.bind(this)
   }
 
+/* 
+? mock data from server :  URL ( icanhazdadjoke.com/search )
+ {
+   "current_page": 1,
+   "limit": 20,
+   "next_page": 2,
+   "previous_page": 1,
+   "results": [
+       {
+           "id": "0189hNRf2g",
+           "joke": "I'm tired of following my dreams. I'm just going to ask them where they are going and meet up with them later."
+       },
+       {
+           "id": "08EQZ8EQukb",
+           "joke": "Did you hear about the guy whose whole left side was cut off? He's all right now."
+       }
+   ],
+   "search_term": "",
+   "status": 200,
+   "total_jokes": 576,
+   "total_pages": 28
+ }
+
+? query parameters
+ page - which page of results to fetch (default: 1) => icanhazdadjoke.com/search?page=3
+ limit - number of results to return per page (default: 20) (max: 30) =>  icanhazdadjoke.com/search?term=dad&limit=2
+ term - search term to use (default: list all jokes) => icanhazdadjoke.com/search?term=dad
+*/
+
   // LIFECYCLE METHODS
   componentDidMount() {
+
+    //! fetch data for the first page
+
+    //fetching data and store to this.state.initialData
+
     if (this.state.initialData.length > 0) {
       let totalPages = Math.ceil(this.state.initialData.length / this.state.resultSet)
       this.setState(() => ({ totalPages }))
@@ -41,7 +80,7 @@ export default class Patables extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (!isEqual(prevProps.initialData, this.props.initialData)) {
-      let initialData = this.props.initialData
+      let initialData = this.props.initialData 
       let totalPages = Math.ceil(initialData.length / this.state.resultSet)
       this.setState(() => ({ initialData, totalPages }))
     }
@@ -104,6 +143,8 @@ export default class Patables extends Component {
     this.setState(() => ({ sortColumn, sortOrder }))
   }
 
+  //? User click the Pagination number will fire this func
+  // onClick={() => { this.props.setPageNumber(1) }}> 
   // CURRENT PAGE
   setPageNumber(currentPage) {
     this.setState(() => ({ currentPage }))
@@ -113,7 +154,6 @@ export default class Patables extends Component {
   // removeItemKey must be unique identifier like 'id'
   removeTableData(arr, removeItemKey) {
     console.log('remove: ', removeItemKey)
-    console.log('Hey I updated')
     let removeItem = arr && arr.find((obj) => obj.id === removeItemKey)
     let index = arr && removeItem && arr.findIndex((obj) => removeItem.id === obj.id)
     if (index !== -1 && index !== undefined) {
@@ -131,12 +171,13 @@ export default class Patables extends Component {
     if (typeof resultSet === 'string') {
       resultSet = parseInt(resultSet)
     }
-
+    //? We can get total pages from fetch data 
     let totalPages = Math.ceil(this.state.initialData.length / resultSet)
     let currentPage = totalPages >= this.state.currentPage ? this.state.currentPage : 1
     this.setState(() => ({ resultSet, totalPages, currentPage }))
   }
 
+  //? this should fire another fetch call with new page number.
   // VISIBLE DATA
   getVisibleData() {
     let { initialData, currentPage, resultSet, search, searchKeys } = this.state
@@ -253,5 +294,6 @@ Patables.propTypes = {
   sortColumn: PropTypes.string,
   sortOrder: PropTypes.string,
   pageNeighbors: PropTypes.number,
-  searchKeys: PropTypes.array
+  searchKeys: PropTypes.array,
+  url: PropTypes.string
 }
