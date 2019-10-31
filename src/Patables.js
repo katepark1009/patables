@@ -20,18 +20,6 @@ export default class Patables extends Component {
       page: '',
       limit: ''
     }
-
-    this.setSearchTerm = this.setSearchTerm.bind(this)
-    this.searchFilter = this.searchFilter.bind(this)
-    this.sortByColumn = this.sortByColumn.bind(this)
-    this.setColumnSortToggle = this.setColumnSortToggle.bind(this)
-    this.setPageNumber = this.setPageNumber.bind(this)
-    this.setResultSet = this.setResultSet.bind(this)
-    this.getVisibleData = this.getVisibleData.bind(this)
-    this.range = this.range.bind(this)
-    this.getPagination = this.getPagination.bind(this)
-    this.getRenderProps = this.getRenderProps.bind(this)
-    this.removeTableData = this.removeTableData.bind(this)
   }
 
   /* 
@@ -80,7 +68,7 @@ export default class Patables extends Component {
   // }
 
   //! SEARCHING - add a submit button to getVisibleData with search term
-  setSearchTerm(e) {
+  setSearchTerm = (e) => {
     let search = e.target.value
     this.setState(() => ({ search }))
   }
@@ -140,13 +128,13 @@ export default class Patables extends Component {
   //? User click the Pagination number will fire this func
   // onClick={() => { this.props.setPageNumber(1) }}> 
   // CURRENT PAGE
-  setPageNumber(currentPage) {
+  setPageNumber = (currentPage) => {
     this.setState(() => ({ currentPage }))
   }
 
   //! Remove data entry - JUST FOR FUN! REMOVE SOON
   // removeItemKey must be unique identifier like 'id'
-  removeTableData(arr, removeItemKey) {
+  removeTableData = (arr, removeItemKey) => {
     console.log('remove: ', removeItemKey)
     let removeItem = arr && arr.find((obj) => obj.id === removeItemKey)
     let index = arr && removeItem && arr.findIndex((obj) => removeItem.id === obj.id)
@@ -159,7 +147,7 @@ export default class Patables extends Component {
   }
 
   //! RESULT SET AKA LIMIT, set limit (resultSet) in state and call getVisibleData
-  setResultSet(value) {
+  setResultSet = (value) => {
     let resultSet = value
 
     if (typeof resultSet === 'string') {
@@ -173,7 +161,7 @@ export default class Patables extends Component {
 
   //! THIS IS THE CORE OF PATABLES2.0 - this should fire another fetch call with query params for BE.
   // VISIBLE DATA
-  getVisibleData() {
+  getVisibleData = () => {
     let uri = this.props.url
     uriBuilder(uri, 'page', this.state.currentPage)
     uriBuilder(uri, 'limit', this.state.resultSet)
@@ -193,7 +181,7 @@ export default class Patables extends Component {
 
   //! PAGINATION data to come from BE
   //! store range as array of page numbers in state, gets passed as props to Pagination. getVisibleDate to call range()
-  range(start, end, step = 1) {
+  range = (start, end, step = 1) => {
     let i = start
     const range = []
 
@@ -233,7 +221,7 @@ export default class Patables extends Component {
   // }
 
   // CREATING PROPS
-  getRenderProps() {
+  getRenderProps = () => {
     return {
       ...this.state,
       setColumnSortToggle: this.setColumnSortToggle,
@@ -242,7 +230,7 @@ export default class Patables extends Component {
       setSearchTerm: this.setSearchTerm,
       nextDisabled: this.state.totalPages === this.state.currentPage,
       prevDisabled: this.state.currentPage === 1,
-      visibleData: this.getVisibleData(), // this is just gonna be part of state
+      // visibleData: this.getVisibleData(), // this is just gonna be part of state
       // paginationButtons: this.getPagination(), // range will be in state also
       removeTableData: this.removeTableData //! KILL ME LATER
     }
@@ -272,8 +260,7 @@ export default class Patables extends Component {
 }
 
 Patables.propTypes = {
-  visibleData: PropTypes.array.isRequired,
-  render: PropTypes.func,
+  visibleData: PropTypes.array,
   children: PropTypes.func,
   initialData: PropTypes.array.isRequired,
   resultSet: PropTypes.number,
