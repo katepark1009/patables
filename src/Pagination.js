@@ -8,9 +8,6 @@ export default class Pagination extends Component {
     this.state = {}
   }
 
-  //? each <li> will have a click handler to fire off fetch call
-  // onClick={() => { this.props.setPageNumber(1) }}> 
-
   render() {
     return this.props.paginationButtons.length <= 1
       ? (
