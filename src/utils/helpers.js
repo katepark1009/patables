@@ -63,5 +63,7 @@ export const isFunction = function(functionToCheck) {
 
 export const uriBuilder = (uri, key, value) => {
   let prefix = uri[uri.length - 1] === '/' ? '?' : '&'
-  return `${uri}${prefix}${key}=${value}`
+  const uriCopy = uri.slice(0, -1)
+  console.log('uri', uriCopy)
+  return `${uriCopy}${prefix}${key}=${value}`
 }

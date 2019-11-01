@@ -11,17 +11,17 @@ export default class Patables extends Component {
       search: '',
       searchKeys: this.props.searchKeys || [],
       currentPage: this.props.startingPage || 1,
-      resultSet: this.props.resultSet || 10,
-      totalPages: Math.ceil(this.props.initialData.length / this.props.resultSet),
+      limit: this.props.limit || 10, // this was resultSet
+      // totalPages: Math.ceil(this.props.initialData.length / this.props.resultSet),
       initialData: this.props.initialData || [], //! not getting initial Data from App anymore.
       sortColumn: this.props.sortColumn || '',
       sortOrder: this.props.sortOrder || 'asc',
       pageNeighbors: this.props.pageNeighbors || 2,
       page: '',
-      limit: ''
+      range: [],
+      totalPages: 1
     }
   }
-
   /* 
   ? mock data from server :  URL ( icanhazdadjoke.com/search )
    {
@@ -59,18 +59,22 @@ export default class Patables extends Component {
   }
 
   //! check if visibleData changed
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (!isEqual(prevProps.initialData, this.props.initialData)) {
-  //     let initialData = this.props.initialData
-  //     let totalPages = Math.ceil(initialData.length / this.state.resultSet)
-  //     this.setState(() => ({ initialData, totalPages }))
-  //   }
-  // }
+  componentDidUpdate(prevProps, prevState) {
+    console.log('updated')
+    if (prevState.limit !== this.state.limit) {
+      this.getVisibleData()
+    }
+  }
 
   //! SEARCHING - add a submit button to getVisibleData with search term
   setSearchTerm = (e) => {
     let search = e.target.value
     this.setState(() => ({ search }))
+  }
+
+  submitSearch = () => {
+    console.log('hi submit')
+    this.getVisibleData()
   }
 
   //! add a method for submitSearchTerm
@@ -132,70 +136,54 @@ export default class Patables extends Component {
     this.setState(() => ({ currentPage }))
   }
 
-  //! Remove data entry - JUST FOR FUN! REMOVE SOON
-  // removeItemKey must be unique identifier like 'id'
-  removeTableData = (arr, removeItemKey) => {
-    console.log('remove: ', removeItemKey)
-    let removeItem = arr && arr.find((obj) => obj.id === removeItemKey)
-    let index = arr && removeItem && arr.findIndex((obj) => removeItem.id === obj.id)
-    if (index !== -1 && index !== undefined) {
-      arr.splice(index, 1)
-      this.setState(() => ({ initialData: arr }))
-    } else {
-      console.log('no matching id to remove')
-    }
-  }
-
   //! RESULT SET AKA LIMIT, set limit (resultSet) in state and call getVisibleData
   setResultSet = (value) => {
-    let resultSet = value
+    let limit = value
 
-    if (typeof resultSet === 'string') {
-      resultSet = parseInt(resultSet)
+    if (typeof limit === 'string') {
+      limit = parseInt(limit)
     }
     //? We can get total pages from fetch data 
-    let totalPages = Math.ceil(this.state.initialData.length / resultSet)
-    let currentPage = totalPages >= this.state.currentPage ? this.state.currentPage : 1
-    this.setState(() => ({ resultSet, totalPages, currentPage }))
+    this.setState({ limit })
   }
 
   //! THIS IS THE CORE OF PATABLES2.0 - this should fire another fetch call with query params for BE.
   // VISIBLE DATA
   getVisibleData = () => {
     let uri = this.props.url
-    uriBuilder(uri, 'page', this.state.currentPage)
-    uriBuilder(uri, 'limit', this.state.resultSet)
-    uriBuilder(uri, 'term', this.state.search)
+    if (this.state.currentPage) { uri = uriBuilder(uri, 'page', this.state.currentPage) }
+    if (this.state.limit) { uri = uriBuilder(uri, 'limit', this.state.limit) }
+    if (this.state.search) { uri = uriBuilder(uri, 'term', this.state.search) }
+    console.log('uri', uri, 'search', this.state.search)
 
-    axios.get(uri, {
-      headers: {
-        'Accept': 'application/json'
-      }
-    })
+    axios.get(uri, this.props.headers)
       .then(response => {
         console.log('jokes from API', response)
-        this.setState(() => { visibleData: response.data.results })
+        this.setState({ 
+          visibleData: response.data.results, 
+          totalPages: response.data.total_pages 
+        })
       })
       .catch(err => console.error(err))
   }
 
   //! PAGINATION data to come from BE
   //! store range as array of page numbers in state, gets passed as props to Pagination. getVisibleDate to call range()
-  range = (start, end, step = 1) => {
-    let i = start
-    const range = []
+  // range = (start, end, step = 1) => {
+  //   let i = start
+  //   const range = []
 
-    while (i <= end) {
-      range.push(i)
-      i += step
-    }
+  //   while (i <= end) {
+  //     range.push(i)
+  //     i += step
+  //   }
 
-    return range
-  }
+  //   return range
+  // }
 
   // getPagination() {
-  //   const { currentPage, totalPages, pageNeighbors } = this.state
-  //   const totalNumbers = (pageNeighbors * 2) + 1
+  //   const { currentPage, totalPages, pageNeighbors } = this.state // 1, 10, 2
+  //   const totalNumbers = (pageNeighbors * 2) + 1 // 5
   //   let pages = []
 
   //   if (totalPages > totalNumbers) {
@@ -230,9 +218,9 @@ export default class Patables extends Component {
       setSearchTerm: this.setSearchTerm,
       nextDisabled: this.state.totalPages === this.state.currentPage,
       prevDisabled: this.state.currentPage === 1,
+      submitSearch: this.submitSearch
       // visibleData: this.getVisibleData(), // this is just gonna be part of state
       // paginationButtons: this.getPagination(), // range will be in state also
-      removeTableData: this.removeTableData //! KILL ME LATER
     }
   }
 
@@ -259,17 +247,18 @@ export default class Patables extends Component {
   }
 }
 
-Patables.propTypes = {
-  visibleData: PropTypes.array,
-  children: PropTypes.func,
-  initialData: PropTypes.array.isRequired,
-  resultSet: PropTypes.number,
-  startingPage: PropTypes.number,
-  sortColumn: PropTypes.string,
-  sortOrder: PropTypes.string,
-  pageNeighbors: PropTypes.number,
-  searchKeys: PropTypes.array,
-  url: PropTypes.string,
-  page: PropTypes.string,
-  limit: PropTypes.string
-}
+// Patables.propTypes = {
+//   visibleData: PropTypes.array,
+//   children: PropTypes.func,
+//   initialData: PropTypes.array.isRequired,
+//   resultSet: PropTypes.number,
+//   startingPage: PropTypes.number,
+//   sortColumn: PropTypes.string,
+//   sortOrder: PropTypes.string,
+//   pageNeighbors: PropTypes.number,
+//   searchKeys: PropTypes.array,
+//   url: PropTypes.string,
+//   header: PropTypes.string,
+//   page: PropTypes.string,
+//   limit: PropTypes.string
+// }
