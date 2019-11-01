@@ -12,8 +12,6 @@ export default class Patables extends Component {
       searchKeys: this.props.searchKeys || [],
       currentPage: this.props.startingPage || 1,
       limit: this.props.limit || 10, // this was resultSet
-      // totalPages: Math.ceil(this.props.initialData.length / this.props.resultSet),
-      initialData: this.props.initialData || [], //! not getting initial Data from App anymore.
       sortColumn: this.props.sortColumn || '',
       sortOrder: this.props.sortOrder || 'asc',
       pageNeighbors: this.props.pageNeighbors || 2,
@@ -77,60 +75,6 @@ export default class Patables extends Component {
     this.getVisibleData()
   }
 
-  //! add a method for submitSearchTerm
-  // searchFilter(arr, searchTerm, searchkeys) {
-  //   // if searchkeys aren't provided use the keys off the first object in array by default
-  //   let searchKeys = searchkeys.length === 0 ? Object.keys(arr[0]) : searchkeys
-  //   let filteredArray = arr.filter((obj) => {
-  //     return searchKeys.some((key) => {
-  //       if (obj[key] === null || obj[key] === undefined) { return false }
-  //       return obj[key].toString().toLowerCase().includes(searchTerm.toLowerCase())
-  //     })
-  //   })
-
-  //   // Resetting the total pages based on filtered data
-  //   let totalPages = Math.ceil(filteredArray.length / this.state.resultSet)
-  //   console.log('totalPages: ', totalPages)
-  //   console.log('filteredArray: ', filteredArray)
-  //   if (totalPages !== this.state.totalPages) {
-  //     this.setState(() => ({ totalPages, currentPage: 1 }))
-  //   }
-
-  //   return filteredArray
-  // }
-
-  //! SORTING - BE work - setColumnSortToggle will toggle 'asc' and 'desc' in state and getVisibleData will fire
-  // sortByColumn(array) {
-  //   let order = this.state.sortOrder.toLowerCase()
-
-  //   return array.sort((a, b) => {
-  //     var x = a[this.state.sortColumn]
-  //     var y = b[this.state.sortColumn]
-
-  //     if (typeof x === 'string') { x = ('' + x).toLowerCase() }
-  //     if (typeof y === 'string') { y = ('' + y).toLowerCase() }
-
-  //     if (order === 'desc') {
-  //       return ((x < y) ? 1 : ((x > y) ? -1 : 0))
-  //     } else {
-  //       return ((x < y) ? -1 : ((x > y) ? 1 : 0))
-  //     }
-  //   })
-  // }
-
-  // setColumnSortToggle(e) {
-  //   let sortColumn = e.target.getAttribute('name')
-  //   let sortOrder = this.state.sortOrder
-  //   if (sortColumn === this.state.sortColumn) {
-  //     sortOrder = sortOrder === 'asc' ? 'desc' : 'asc'
-  //   } else {
-  //     sortOrder = 'asc'
-  //   }
-  //   this.setState(() => ({ sortColumn, sortOrder }))
-  // }
-
-  //? User click the Pagination number will fire this func
-  // onClick={() => { this.props.setPageNumber(1) }}> 
   // CURRENT PAGE
   setPageNumber = (currentPage) => {
     this.setState(() => ({ currentPage }))
@@ -160,8 +104,8 @@ export default class Patables extends Component {
       .then(response => {
         console.log('jokes from API', response)
         this.setState({ 
-          visibleData: response.data.results, 
-          totalPages: response.data.total_pages 
+          visibleData: response.data.results,
+          totalPages: response.data.total_pages
         })
       })
       .catch(err => console.error(err))
@@ -219,8 +163,6 @@ export default class Patables extends Component {
       nextDisabled: this.state.totalPages === this.state.currentPage,
       prevDisabled: this.state.currentPage === 1,
       submitSearch: this.submitSearch
-      // visibleData: this.getVisibleData(), // this is just gonna be part of state
-      // paginationButtons: this.getPagination(), // range will be in state also
     }
   }
 
@@ -247,18 +189,18 @@ export default class Patables extends Component {
   }
 }
 
-// Patables.propTypes = {
-//   visibleData: PropTypes.array,
-//   children: PropTypes.func,
-//   initialData: PropTypes.array.isRequired,
-//   resultSet: PropTypes.number,
-//   startingPage: PropTypes.number,
-//   sortColumn: PropTypes.string,
-//   sortOrder: PropTypes.string,
-//   pageNeighbors: PropTypes.number,
-//   searchKeys: PropTypes.array,
-//   url: PropTypes.string,
-//   header: PropTypes.string,
-//   page: PropTypes.string,
-//   limit: PropTypes.string
-// }
+Patables.propTypes = {
+  visibleData: PropTypes.array,
+  children: PropTypes.func,
+  render: PropTypes.func,
+  startingPage: PropTypes.number,
+  sortColumn: PropTypes.string,
+  sortOrder: PropTypes.string,
+  pageNeighbors: PropTypes.number,
+  searchKeys: PropTypes.array,
+  url: PropTypes.string,
+  header: PropTypes.string,
+  page: PropTypes.string,
+  limit: PropTypes.string,
+  range: PropTypes.array
+}
