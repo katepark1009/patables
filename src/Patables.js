@@ -1,82 +1,156 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { isFunction, uriBuilder } from './utils/helpers'
-import axios from 'axios'
+import { isEqual, isFunction } from './utils/helpers'
 
 export default class Patables extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      visibleData: [],
       search: '',
       searchKeys: this.props.searchKeys || [],
       currentPage: this.props.startingPage || 1,
-      limit: this.props.limit || 10, // this was resultSet
+      resultSet: this.props.resultSet || 10,
+      totalPages: Math.ceil(this.props.initialData.length / this.props.resultSet),
+      initialData: this.props.initialData || [],
       sortColumn: this.props.sortColumn || '',
       sortOrder: this.props.sortOrder || 'asc',
-      pageNeighbors: this.props.pageNeighbors || 2,
-      totalPages: 1
+      pageNeighbors: this.props.pageNeighbors || 2
+    }
+
+    this.setSearchTerm = this.setSearchTerm.bind(this)
+    this.searchFilter = this.searchFilter.bind(this)
+    this.sortByColumn = this.sortByColumn.bind(this)
+    this.setColumnSortToggle = this.setColumnSortToggle.bind(this)
+    this.setPageNumber = this.setPageNumber.bind(this)
+    this.setResultSet = this.setResultSet.bind(this)
+    this.getVisibleData = this.getVisibleData.bind(this)
+    this.range = this.range.bind(this)
+    this.getPagination = this.getPagination.bind(this)
+    this.getRenderProps = this.getRenderProps.bind(this)
+  }
+
+  // LIFECYCLE METHODS
+  componentDidMount() {
+    if (this.state.initialData.length > 0) {
+      let totalPages = Math.ceil(this.state.initialData.length / this.state.resultSet)
+      this.setState(() => ({ totalPages }))
     }
   }
 
-  componentDidMount() {
-    this.getVisibleData()
+  componentDidUpdate(prevProps, prevState) {
+    if (!isEqual(prevProps.initialData, this.props.initialData)) {
+      let initialData = this.props.initialData
+      let totalPages = Math.ceil(initialData.length / this.state.resultSet)
+      this.setState(() => ({ initialData, totalPages }))
+    }
   }
 
-  setSearchTerm = (e) => {
+  // SEARCHING
+  setSearchTerm(e) {
     let search = e.target.value
     this.setState(() => ({ search }))
   }
 
-  submitSearch = () => {
-    if (this.state.search) {
-      this.setState({ currentPage: 1 }, this.getVisibleData)
+  searchFilter(arr, searchTerm, searchkeys) {
+    // if searchkeys aren't provided use the keys off the first object in array by default
+    let searchKeys = searchkeys.length === 0 ? Object.keys(arr[0]) : searchkeys
+    let filteredArray = arr.filter((obj) => {
+      return searchKeys.some((key) => {
+        if (obj[key] === null || obj[key] === undefined) { return false }
+        return obj[key].toString().toLowerCase().includes(searchTerm.toLowerCase())
+      })
+    })
+
+    // Resetting the total pages based on filtered data
+    let totalPages = Math.ceil(filteredArray.length / this.state.resultSet)
+    console.log('totalPages: ', totalPages)
+    console.log('filteredArray: ', filteredArray)
+    if (totalPages !== this.state.totalPages) {
+      this.setState(() => ({ totalPages, currentPage: 1 }))
     }
+
+    return filteredArray
   }
 
-  clearSearch = () => {
-    this.setState({
-      search: '',
-      currentPage: 1
-    }, this.getVisibleData)
+  // SORTING
+  sortByColumn(array) {
+    let order = this.state.sortOrder.toLowerCase()
+
+    return array.sort((a, b) => {
+      var x = a[this.state.sortColumn]
+      var y = b[this.state.sortColumn]
+
+      if (typeof x === 'string') { x = ('' + x).toLowerCase() }
+      if (typeof y === 'string') { y = ('' + y).toLowerCase() }
+
+      if (order === 'desc') {
+        return ((x < y) ? 1 : ((x > y) ? -1 : 0))
+      } else {
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0))
+      }
+    })
+  }
+
+  setColumnSortToggle(e) {
+    let sortColumn = e.target.getAttribute('name')
+    let sortOrder = this.state.sortOrder
+    if (sortColumn === this.state.sortColumn) {
+      sortOrder = sortOrder === 'asc' ? 'desc' : 'asc'
+    } else {
+      sortOrder = 'asc'
+    }
+    this.setState(() => ({ sortColumn, sortOrder }))
   }
 
   // CURRENT PAGE
-  setPageNumber = (currentPage) => {
-    this.setState(() => ({ currentPage }), this.getVisibleData)
+  setPageNumber(currentPage) {
+    this.setState(() => ({ currentPage }))
   }
 
-  //! Should user go to page 1 if they change the result set (limit) while currentPage !== 1
-  setResultSet = (value) => {
-    let limit = value
+  // RESULT SET
+  setResultSet(value) {
+    let resultSet = value
 
-    if (typeof limit === 'string') {
-      limit = parseInt(limit)
+    if (typeof resultSet === 'string') {
+      resultSet = parseInt(resultSet)
     }
 
-    this.setState({ currentPage: 1, limit }, this.getVisibleData)
+    let totalPages = Math.ceil(this.state.initialData.length / resultSet)
+    let currentPage = totalPages >= this.state.currentPage ? this.state.currentPage : 1
+    this.setState(() => ({ resultSet, totalPages, currentPage }))
   }
 
-  getVisibleData = () => {
-    let uri = this.props.url
-    if (this.state.currentPage) { uri = uriBuilder(uri, 'page', this.state.currentPage) }
-    if (this.state.limit) { uri = uriBuilder(uri, 'limit', this.state.limit) }
-    if (this.state.search) { uri = uriBuilder(uri, 'term', this.state.search) }
-    console.log('uri', uri, 'search', this.state.search)
+  // VISIBLE DATA
+  getVisibleData() {
+    let { initialData, currentPage, resultSet, search, searchKeys } = this.state
+    let offset = (currentPage - 1) * parseInt(resultSet)
+    let topOfRange = offset + parseInt(resultSet)
 
-    axios.get(uri, this.props.headers)
-      .then(response => {
-        console.log('jokes from API', response)
-        this.setState({
-          visibleData: response.data.results,
-          totalPages: response.data.total_pages
-        })
-      })
-      .catch(err => console.error(err))
+    // searchFilter will return a result set where the searchTerm matches the designated searchKeys
+    if (this.state.search !== '') {
+      initialData = this.searchFilter(initialData, search, searchKeys)
+    } else {
+      let totalPages = Math.ceil(initialData.length / this.state.resultSet)
+      if (totalPages !== this.state.totalPages) {
+        this.setState(() => ({ totalPages, currentPage: 1 }))
+      }
+    }
+
+    // sortByColumn will return a result set which is ordered by sortColumn and sortOrder
+    if (this.state.sortColumn !== '') {
+      initialData = this.sortByColumn(initialData)
+    }
+
+    // reducing the result set down to one page worth of data
+    return initialData.filter((d, i) => {
+      const visibleData = i >= offset && i < topOfRange
+      return visibleData
+    })
   }
 
-  range = (start, end, step = 1) => {
+  // PAGINATION
+  range(start, end, step = 1) {
     let i = start
     const range = []
 
@@ -116,7 +190,7 @@ export default class Patables extends Component {
   }
 
   // CREATING PROPS
-  getRenderProps = () => {
+  getRenderProps() {
     return {
       ...this.state,
       setColumnSortToggle: this.setColumnSortToggle,
@@ -125,8 +199,7 @@ export default class Patables extends Component {
       setSearchTerm: this.setSearchTerm,
       nextDisabled: this.state.totalPages === this.state.currentPage,
       prevDisabled: this.state.currentPage === 1,
-      submitSearch: this.submitSearch,
-      clearSearch: this.clearSearch,
+      visibleData: this.getVisibleData(),
       paginationButtons: this.getPagination()
     }
   }
@@ -155,15 +228,13 @@ export default class Patables extends Component {
 }
 
 Patables.propTypes = {
-  visibleData: PropTypes.array,
-  children: PropTypes.func,
   render: PropTypes.func,
+  children: PropTypes.func,
+  initialData: PropTypes.array.isRequired,
+  resultSet: PropTypes.number,
   startingPage: PropTypes.number,
   sortColumn: PropTypes.string,
   sortOrder: PropTypes.string,
   pageNeighbors: PropTypes.number,
-  searchKeys: PropTypes.array,
-  url: PropTypes.string,
-  headers: PropTypes.object,
-  limit: PropTypes.number
+  searchKeys: PropTypes.array
 }
