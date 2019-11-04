@@ -12,7 +12,7 @@ export default class PatablesAsync extends Component {
       search: '',
       searchKeys: this.props.searchKeys || [],
       currentPage: this.props.startingPage || 1,
-      limit: this.props.limit || 10, // this was resultSet
+      resultSet: this.props.resultSet || 10,
       sortColumn: this.props.sortColumn || '',
       sortOrder: this.props.sortOrder || 'asc',
       pageNeighbors: this.props.pageNeighbors || 2,
@@ -24,6 +24,25 @@ export default class PatablesAsync extends Component {
     this.getVisibleData()
   }
 
+  getVisibleData = () => {
+    let uri = this.props.url
+    if (this.state.currentPage) { uri = uriBuilder(uri, 'page', this.state.currentPage) }
+    if (this.state.resultSet) { uri = uriBuilder(uri, 'limit', this.state.resultSet) }
+    if (this.state.search) { uri = uriBuilder(uri, 'term', this.state.search) }
+    console.log('PatablesAsync uri', uri)
+
+    axios.get(uri, this.props.headers)
+      .then(response => {
+        console.log('PatablesAsync jokes from API', response)
+        this.setState({
+          visibleData: response.data.results,
+          totalPages: response.data.total_pages
+        })
+      })
+      .catch(err => console.error(err))
+  }
+
+  // SEARCH BOX
   setSearchTerm = (e) => {
     let search = e.target.value
     this.setState(() => ({ search }))
@@ -47,35 +66,18 @@ export default class PatablesAsync extends Component {
     this.setState(() => ({ currentPage }), this.getVisibleData)
   }
 
-  //! Should user go to page 1 if they change the result set (limit) while currentPage !== 1
+  // RESULT SET AKA LIMIT
   setResultSet = (value) => {
-    let limit = value
+    let resultSet = value
 
-    if (typeof limit === 'string') {
-      limit = parseInt(limit)
+    if (typeof resultSet === 'string') {
+      resultSet = parseInt(resultSet)
     }
 
-    this.setState({ currentPage: 1, limit }, this.getVisibleData)
+    this.setState({ currentPage: 1, resultSet }, this.getVisibleData)
   }
 
-  getVisibleData = () => {
-    let uri = this.props.url
-    if (this.state.currentPage) { uri = uriBuilder(uri, 'page', this.state.currentPage) }
-    if (this.state.limit) { uri = uriBuilder(uri, 'limit', this.state.limit) }
-    if (this.state.search) { uri = uriBuilder(uri, 'term', this.state.search) }
-    console.log('uri', uri, 'search', this.state.search)
-
-    axios.get(uri, this.props.headers)
-      .then(response => {
-        console.log('jokes from API', response)
-        this.setState({
-          visibleData: response.data.results,
-          totalPages: response.data.total_pages
-        })
-      })
-      .catch(err => console.error(err))
-  }
-
+  // GENERATE AN ARRAY OF PAGES
   range = (start, end, step = 1) => {
     let i = start
     const range = []
@@ -155,15 +157,15 @@ export default class PatablesAsync extends Component {
 }
 
 PatablesAsync.propTypes = {
-  visibleData: PropTypes.array,
   children: PropTypes.func,
   render: PropTypes.func,
+  visibleData: PropTypes.array,
+  searchKeys: PropTypes.array,
   startingPage: PropTypes.number,
+  resultSet: PropTypes.number,
   sortColumn: PropTypes.string,
   sortOrder: PropTypes.string,
   pageNeighbors: PropTypes.number,
-  searchKeys: PropTypes.array,
   url: PropTypes.string,
-  headers: PropTypes.object,
-  limit: PropTypes.number
+  headers: PropTypes.object
 }

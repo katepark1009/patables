@@ -69,6 +69,5 @@ export const uriBuilder = (uri, key, value) => {
     uriCopy = uri.slice(0, -1)
   }
 
-  console.log('uri', uriCopy)
   return `${uriCopy}${prefix}${key}=${value}`
 }
