@@ -12,7 +12,7 @@ export default class PatablesAsync extends Component {
       search: '',
       searchKeys: this.props.searchKeys || [],
       currentPage: this.props.startingPage || 1,
-      resultSet: this.props.resultSet || 10,
+      resultSet: this.props.resultSet || 5,
       sortColumn: this.props.sortColumn || '',
       sortOrder: this.props.sortOrder || 'asc',
       pageNeighbors: this.props.pageNeighbors || 2,
@@ -25,31 +25,32 @@ export default class PatablesAsync extends Component {
     this.getVisibleData()
   }
 
-  //! getting requested param from props
   getVisibleData = () => {
-    this.setState({ isLoading: true })
     let uri = this.props.url
-    // if (this.state.currentPage) { uri = uriBuilder(uri, 'page', this.state.currentPage) }
-    // if (this.state.resultSet) { uri = uriBuilder(uri, 'limit', this.state.resultSet) }
-    // if (this.state.search) { uri = uriBuilder(uri, 'term', this.state.search) }
-    if (this.state.currentPage && this.props.pageParam) { uri = uriBuilder(uri, this.props.pageParam, this.state.currentPage) }
+    if (this.state.currentPage && this.props.pageParam) { 
+      uri = uriBuilder(uri, this.props.pageParam, this.state.currentPage) 
+    } else {
+      console.error(`currentPage or pageParam are not provided, currentPage:${this.state.currentPage}, pageParam:${this.props.pageParam}`)
+    }
     if (this.state.resultSet && this.props.limitParam) { uri = uriBuilder(uri, this.props.limitParam, this.state.resultSet) }
     if (this.state.search && this.props.searchParam) { uri = uriBuilder(uri, this.props.searchParam, this.state.search) }
     console.log('PatablesAsync uri', uri)
-
-    axios.get(uri, this.props.config)
-      .then(response => {
-        console.log('PatablesAsync jokes from API', response)
-        this.setState({
-          visibleData: response.data.results, //! from props?
-          totalPages: response.data.total_pages,
-          isLoading: false
+    this.setState({ isLoading: true }, () => {
+      axios.get(uri, this.props.config)
+        .then(response => {
+          console.log('PatablesAsync jokes from API', response)
+          this.setState({
+            visibleData: response.data.results, //! from props?
+            totalPages: response.data.total_pages
+          })
         })
-      })
-      .catch(err => {
-        console.error(err) //! user friendly error
-      })
-
+        .catch(err => {
+          console.error('error:', err)
+        })
+        .finally(() => {
+          this.setState({ isLoading: false })
+        })
+    })
   }
 
   // SEARCH BOX
