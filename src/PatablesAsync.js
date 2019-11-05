@@ -16,7 +16,8 @@ export default class PatablesAsync extends Component {
       sortColumn: this.props.sortColumn || '',
       sortOrder: this.props.sortOrder || 'asc',
       pageNeighbors: this.props.pageNeighbors || 2,
-      totalPages: 1
+      totalPages: 1,
+      isLoading: false
     }
   }
 
@@ -24,22 +25,31 @@ export default class PatablesAsync extends Component {
     this.getVisibleData()
   }
 
+  //! getting requested param from props
   getVisibleData = () => {
+    this.setState({ isLoading: true })
     let uri = this.props.url
-    if (this.state.currentPage) { uri = uriBuilder(uri, 'page', this.state.currentPage) }
-    if (this.state.resultSet) { uri = uriBuilder(uri, 'limit', this.state.resultSet) }
-    if (this.state.search) { uri = uriBuilder(uri, 'term', this.state.search) }
+    // if (this.state.currentPage) { uri = uriBuilder(uri, 'page', this.state.currentPage) }
+    // if (this.state.resultSet) { uri = uriBuilder(uri, 'limit', this.state.resultSet) }
+    // if (this.state.search) { uri = uriBuilder(uri, 'term', this.state.search) }
+    if (this.state.currentPage && this.props.pageParam) { uri = uriBuilder(uri, this.props.pageParam, this.state.currentPage) }
+    if (this.state.resultSet && this.props.limitParam) { uri = uriBuilder(uri, this.props.limitParam, this.state.resultSet) }
+    if (this.state.search && this.props.searchParam) { uri = uriBuilder(uri, this.props.searchParam, this.state.search) }
     console.log('PatablesAsync uri', uri)
 
-    axios.get(uri, this.props.headers)
+    axios.get(uri, this.props.config)
       .then(response => {
         console.log('PatablesAsync jokes from API', response)
         this.setState({
-          visibleData: response.data.results,
-          totalPages: response.data.total_pages
+          visibleData: response.data.results, //! from props?
+          totalPages: response.data.total_pages,
+          isLoading: false
         })
       })
-      .catch(err => console.error(err))
+      .catch(err => {
+        console.error(err) //! user friendly error
+      })
+
   }
 
   // SEARCH BOX
@@ -167,5 +177,8 @@ PatablesAsync.propTypes = {
   sortOrder: PropTypes.string,
   pageNeighbors: PropTypes.number,
   url: PropTypes.string,
-  headers: PropTypes.object
+  config: PropTypes.object,
+  pageParam: PropTypes.string,
+  limitParam: PropTypes.string,
+  searchParam: PropTypes.string
 }
