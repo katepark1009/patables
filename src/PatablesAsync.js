@@ -27,13 +27,21 @@ export default class PatablesAsync extends Component {
 
   getVisibleData = () => {
     let uri = this.props.url
-    if (this.state.currentPage && this.props.pageParam) { 
-      uri = uriBuilder(uri, this.props.pageParam, this.state.currentPage) 
+    if (this.state.currentPage && this.props.pageParam) {
+      uri = uriBuilder(uri, this.props.pageParam, this.state.currentPage)
     } else {
-      console.error(`currentPage or pageParam are not provided, currentPage:${this.state.currentPage}, pageParam:${this.props.pageParam}`)
+      console.error(`currentPage or pageParam are not provided. currentPage:${this.state.currentPage}, pageParam:${this.props.pageParam}`)
     }
-    if (this.state.resultSet && this.props.limitParam) { uri = uriBuilder(uri, this.props.limitParam, this.state.resultSet) }
-    if (this.state.search && this.props.searchParam) { uri = uriBuilder(uri, this.props.searchParam, this.state.search) }
+    if (this.state.resultSet && this.props.limitParam) {
+      uri = uriBuilder(uri, this.props.limitParam, this.state.resultSet)
+    } else {
+      console.error(`resultSet or limitParam are not provided. resultSet:${this.state.resultSet}, limitParam:${this.props.limitParam}`)
+    }
+    if (this.state.search && this.props.searchParam) {
+      uri = uriBuilder(uri, this.props.searchParam, this.state.search)
+    } else {
+      console.error(`search or searchParam are not provided. search:${this.state.search}, searchParam:${this.props.searchParam}`)
+    }
     console.log('PatablesAsync uri', uri)
     this.setState({ isLoading: true }, () => {
       axios.get(uri, this.props.config)
