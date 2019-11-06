@@ -46,10 +46,25 @@ export default class PatablesAsync extends Component {
       axios.get(uri, this.props.config)
         .then(response => {
           console.log('PatablesAsync jokes from API', response)
-          this.setState({
-            visibleData: response.data.results, //! from props?
-            totalPages: response.data.total_pages
+
+          let finalData = { ...response } // loop over dataPath to access the data at the correct location
+          this.props.dataPath.forEach(key => {
+            finalData = finalData[key]
           })
+          console.log('finalRes', finalData)
+
+          let finalPageTotal = { ...response }
+          if (this.props.pageTotalPath) { // if an array is passed in as pageTotalPath, loop over pageTotalPath to access page total
+            this.props.pageTotalPath.forEach(key => {
+              finalPageTotal = finalPageTotal[key]
+            })
+          }
+          console.log('final page total', finalPageTotal)
+
+          this.setState((prevState) => ({
+            visibleData: finalData,
+            totalPages: prevState.totalPages === finalPageTotal ? prevState.totalPages : finalPageTotal
+          }))
         })
         .catch(err => {
           console.error('error:', err)
@@ -70,7 +85,7 @@ export default class PatablesAsync extends Component {
     if (this.state.search && this.props.searchParam) {
       this.setState({ currentPage: 1 }, this.getVisibleData)
     } else {
-      console.warn('cannot search without searchParam')
+      console.warn('Cannot search without searchParam.')
     }
   }
 
@@ -190,5 +205,7 @@ PatablesAsync.propTypes = {
   config: PropTypes.object,
   pageParam: PropTypes.string,
   limitParam: PropTypes.string,
-  searchParam: PropTypes.string
+  searchParam: PropTypes.string,
+  dataPath: PropTypes.array,
+  pageTotalPath: PropTypes.array
 }
