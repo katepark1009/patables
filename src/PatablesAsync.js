@@ -54,20 +54,26 @@ export default class PatablesAsync extends Component {
     this.setState({ isLoading: true }, () => {
       axios.get(uri, this.props.config)
         .then(response => {
-          console.log('TCL: PatablesAsync -> getVisibleData -> response', response)
-          let copyResponse = { ...response }
-          let copyTotalPages = { ...response }
-          this.props.dataPath.forEach((path) => {
-            copyResponse = copyResponse[path]
+          console.log('PatablesAsync jokes from API', response)
+
+          let finalData = { ...response } // loop over dataPath to access the data at the correct location
+          this.props.dataPath.forEach(key => {
+            finalData = finalData[key]
           })
-          this.props.totalPagesPath.forEach((path) => {
-            copyTotalPages = copyTotalPages[path]
-          })
-          console.log('copyResponse:', copyResponse, 'copyTotalPages:', copyTotalPages)
-          this.setState({
-            visibleData: copyResponse,
-            totalPages: copyTotalPages
-          })
+          console.log('finalRes', finalData)
+
+          let finalPageTotal = { ...response }
+          if (this.props.pageTotalPath) { // if an array is passed in as pageTotalPath, loop over pageTotalPath to access page total
+            this.props.pageTotalPath.forEach(key => {
+              finalPageTotal = finalPageTotal[key]
+            })
+          }
+          console.log('final page total', finalPageTotal)
+
+          this.setState((prevState) => ({
+            visibleData: finalData,
+            totalPages: prevState.totalPages === finalPageTotal ? prevState.totalPages : finalPageTotal
+          }))
         })
         .catch(err => {
           console.error('error:', err)
@@ -88,7 +94,7 @@ export default class PatablesAsync extends Component {
     if (this.state.search && this.props.searchParam) {
       this.setState({ currentPage: 1 }, this.getVisibleData)
     } else {
-      console.warn('cannot search without searchParam')
+      console.warn('Cannot search without searchParam.')
     }
   }
 
@@ -210,6 +216,6 @@ PatablesAsync.propTypes = {
   limitParam: PropTypes.string,
   searchParam: PropTypes.string,
   dataPath: PropTypes.array,
-  totalPagesPath: PropTypes.array,
-  apiKey: PropTypes.array
+  apiKey: PropTypes.array,
+  pageTotalPath: PropTypes.array
 }
