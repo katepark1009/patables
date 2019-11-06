@@ -38,16 +38,13 @@ export default class PatablesAsync extends Component {
       console.warn(`limitParam not provided. limitParam:${this.props.limitParam}`)
     }
     if (this.props.searchParam[0]) {
-      let searchKeyword = ''
-      if (this.state.search) {
-        searchKeyword = this.state.search
-      } else {
-        searchKeyword = 'hi' //! default search key
-      }
-      uri = uriBuilder(uri, this.props.searchParam[0], searchKeyword)
+      uri = uriBuilder(uri, this.props.searchParam[0], this.props.searchParam[1])
     }
     if (this.props.apiKey) {
       uri = uriBuilder(uri, this.props.apiKey[0], this.props.apiKey[1])
+    }
+    if (this.props.sortParam) {
+      uri = uriBuilder(uri, this.props.sortParam[0], this.props.sortParam[1])
     }
 
     console.log('PatablesAsync uri', uri)
@@ -82,6 +79,36 @@ export default class PatablesAsync extends Component {
           this.setState({ isLoading: false })
         })
     })
+  }
+
+  // SORT ORDER
+  sortByColumn(array) {
+    let order = this.state.sortOrder.toLowerCase()
+
+    return array.sort((a, b) => {
+      var x = a[this.state.sortColumn]
+      var y = b[this.state.sortColumn]
+
+      if (typeof x === 'string') { x = ('' + x).toLowerCase() }
+      if (typeof y === 'string') { y = ('' + y).toLowerCase() }
+
+      if (order === 'desc') {
+        return ((x < y) ? 1 : ((x > y) ? -1 : 0))
+      } else {
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0))
+      }
+    })
+  }
+
+  setColumnSortToggle(e) {
+    let sortColumn = e.target.getAttribute('name')
+    let sortOrder = this.state.sortOrder
+    if (sortColumn === this.state.sortColumn) {
+      sortOrder = sortOrder === 'asc' ? 'desc' : 'asc'
+    } else {
+      sortOrder = 'asc'
+    }
+    this.setState(() => ({ sortColumn, sortOrder }))
   }
 
   // SEARCH BOX
@@ -214,8 +241,9 @@ PatablesAsync.propTypes = {
   config: PropTypes.object,
   pageParam: PropTypes.string,
   limitParam: PropTypes.string,
-  searchParam: PropTypes.string,
+  searchParam: PropTypes.array,
   dataPath: PropTypes.array,
   apiKey: PropTypes.array,
-  pageTotalPath: PropTypes.array
+  pageTotalPath: PropTypes.array,
+  sortParam: PropTypes.string
 }
