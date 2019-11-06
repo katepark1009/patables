@@ -37,18 +37,36 @@ export default class PatablesAsync extends Component {
     } else {
       console.warn(`limitParam not provided. limitParam:${this.props.limitParam}`)
     }
-    if (this.props.searchParam) {
-      uri = uriBuilder(uri, this.props.searchParam, this.state.search)
+    if (this.props.searchParam[0]) {
+      let searchKeyword = ''
+      if (this.state.search) {
+        searchKeyword = this.state.search
+      } else {
+        searchKeyword = 'hi' //! default search key
+      }
+      uri = uriBuilder(uri, this.props.searchParam[0], searchKeyword)
+    }
+    if (this.props.apiKey) {
+      uri = uriBuilder(uri, this.props.apiKey[0], this.props.apiKey[1])
     }
 
     console.log('PatablesAsync uri', uri)
     this.setState({ isLoading: true }, () => {
       axios.get(uri, this.props.config)
         .then(response => {
-          console.log('PatablesAsync jokes from API', response)
+          console.log('TCL: PatablesAsync -> getVisibleData -> response', response)
+          let copyResponse = { ...response }
+          let copyTotalPages = { ...response }
+          this.props.dataPath.forEach((path) => {
+            copyResponse = copyResponse[path]
+          })
+          this.props.totalPagesPath.forEach((path) => {
+            copyTotalPages = copyTotalPages[path]
+          })
+          console.log('copyResponse:', copyResponse, 'copyTotalPages:', copyTotalPages)
           this.setState({
-            visibleData: response.data.results, //! from props?
-            totalPages: response.data.total_pages
+            visibleData: copyResponse,
+            totalPages: copyTotalPages
           })
         })
         .catch(err => {
@@ -190,5 +208,8 @@ PatablesAsync.propTypes = {
   config: PropTypes.object,
   pageParam: PropTypes.string,
   limitParam: PropTypes.string,
-  searchParam: PropTypes.string
+  searchParam: PropTypes.string,
+  dataPath: PropTypes.array,
+  totalPagesPath: PropTypes.array,
+  apiKey: PropTypes.array
 }
