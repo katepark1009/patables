@@ -38,7 +38,7 @@ export default class PatablesAsync extends Component {
       console.warn(`limitParam not provided. limitParam:${this.props.limitParam}`)
     }
     if (this.props.searchParam[0]) {
-      uri = uriBuilder(uri, this.props.searchParam[0], this.props.searchParam[1])
+      uri = uriBuilder(uri, this.props.searchParam[0], !this.state.search ? this.props.searchParam[1] : this.state.search)
     }
     if (this.props.apiKey) {
       uri = uriBuilder(uri, this.props.apiKey[0], this.props.apiKey[1])
