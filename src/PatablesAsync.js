@@ -54,7 +54,7 @@ export default class PatablesAsync extends Component {
           console.log('PatablesAsync jokes from API', response)
 
           let finalData = { ...response } // loop over dataPath to access the data at the correct location
-          this.props.dataPath.forEach(key => {
+          this.props.dataPath && this.props.dataPath.forEach(key => {
             finalData = finalData[key]
           })
           console.log('finalRes', finalData)
