@@ -223,12 +223,12 @@ PatablesAsync.propTypes = {
   pageNeighbors: PropTypes.number,
   url: PropTypes.string,
   config: PropTypes.object,
-  pageParam: PropTypes.string,
-  limitParam: PropTypes.string,
-  searchParam: PropTypes.array,
   dataPath: PropTypes.array,
   apiKey: PropTypes.array,
   pageTotalPath: PropTypes.array,
+  pageParam: PropTypes.string,
+  limitParam: PropTypes.string,
+  searchParam: PropTypes.array,
   orderByParam: PropTypes.array,
   sortParam: PropTypes.array
 }
