@@ -14,7 +14,7 @@ export default class PatablesAsync extends Component {
       currentPage: this.props.startingPage || 1,
       resultSet: this.props.resultSet || 5,
       sortColumn: this.props.sortColumn || '',
-      sortOrder: this.props.sortOrder || 'asc',
+      sortOrder: this.props.orderByParam? this.props.orderByParam[1] : 'asc',
       pageNeighbors: this.props.pageNeighbors || 2,
       totalPages: 1,
       isLoading: false
@@ -46,7 +46,9 @@ export default class PatablesAsync extends Component {
     if (this.props.sortParam) {
       uri = uriBuilder(uri, this.props.sortParam[0], this.props.sortParam[1])
     }
-
+    if (this.props.orderByParam) {
+      uri = uriBuilder(uri, this.props.orderByParam[0], this.state.sortOrder)
+    }
     console.log('PatablesAsync uri', uri)
     this.setState({ isLoading: true }, () => {
       axios.get(uri, this.props.config)
@@ -69,7 +71,7 @@ export default class PatablesAsync extends Component {
 
           this.setState((prevState) => ({
             visibleData: finalData,
-            totalPages: prevState.totalPages === finalPageTotal ? prevState.totalPages : finalPageTotal
+            totalPages: typeof finalPageTotal !== 'number' ? prevState.totalPages : finalPageTotal
           }))
         })
         .catch(err => {
@@ -82,25 +84,7 @@ export default class PatablesAsync extends Component {
   }
 
   // SORT ORDER
-  sortByColumn(array) {
-    let order = this.state.sortOrder.toLowerCase()
-
-    return array.sort((a, b) => {
-      var x = a[this.state.sortColumn]
-      var y = b[this.state.sortColumn]
-
-      if (typeof x === 'string') { x = ('' + x).toLowerCase() }
-      if (typeof y === 'string') { y = ('' + y).toLowerCase() }
-
-      if (order === 'desc') {
-        return ((x < y) ? 1 : ((x > y) ? -1 : 0))
-      } else {
-        return ((x < y) ? -1 : ((x > y) ? 1 : 0))
-      }
-    })
-  }
-
-  setColumnSortToggle(e) {
+  setColumnSortToggle = (e) => {
     let sortColumn = e.target.getAttribute('name')
     let sortOrder = this.state.sortOrder
     if (sortColumn === this.state.sortColumn) {
@@ -108,7 +92,7 @@ export default class PatablesAsync extends Component {
     } else {
       sortOrder = 'asc'
     }
-    this.setState(() => ({ sortColumn, sortOrder }))
+    this.setState(() => ({ sortColumn, sortOrder }), this.getVisibleData)
   }
 
   // SEARCH BOX
@@ -245,5 +229,6 @@ PatablesAsync.propTypes = {
   dataPath: PropTypes.array,
   apiKey: PropTypes.array,
   pageTotalPath: PropTypes.array,
-  sortParam: PropTypes.string
+  orderByParam: PropTypes.array,
+  sortParam: PropTypes.array
 }
