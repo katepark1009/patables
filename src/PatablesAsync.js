@@ -10,11 +10,9 @@ export default class PatablesAsync extends Component {
     this.state = {
       visibleData: [],
       search: '',
-      searchKeys: this.props.searchKeys || [],
       currentPage: this.props.startingPage || 1,
       resultSet: this.props.resultSet || 5,
-      sortColumn: this.props.sortColumn || '',
-      sortOrder: this.props.orderByParam? this.props.orderByParam[1] : 'asc',
+      sortOrder: this.props.orderByParam ? this.props.orderByParam[1] : 'asc',
       pageNeighbors: this.props.pageNeighbors || 2,
       totalPages: 1,
       isLoading: false
@@ -29,15 +27,17 @@ export default class PatablesAsync extends Component {
     let uri = this.props.url
     if (this.props.pageParam) {
       uri = uriBuilder(uri, this.props.pageParam, this.state.currentPage)
-    } else {
-      console.warn(`pageParam not provided. pageParam:${this.props.pageParam}`)
     }
+    // } else {
+    //   console.warn(`pageParam not provided. pageParam:${this.props.pageParam}`)
+    // }
     if (this.props.limitParam) {
       uri = uriBuilder(uri, this.props.limitParam, this.state.resultSet)
-    } else {
-      console.warn(`limitParam not provided. limitParam:${this.props.limitParam}`)
     }
-    if (this.props.searchParam[0]) {
+    // } else {
+    //   console.warn(`limitParam not provided. limitParam:${this.props.limitParam}`)
+    // }
+    if (this.props.searchParam) {
       uri = uriBuilder(uri, this.props.searchParam[0], !this.state.search ? this.props.searchParam[1] : this.state.search)
     }
     if (this.props.apiKey) {
@@ -49,6 +49,13 @@ export default class PatablesAsync extends Component {
     if (this.props.orderByParam) {
       uri = uriBuilder(uri, this.props.orderByParam[0], this.state.sortOrder)
     }
+    if (this.props.customParam) {
+      let param = this.props.customParam
+      param.map(obj => {
+        let paramVal = Object.values(obj)
+        uri = uriBuilder(uri, paramVal[0], paramVal[1])
+      })
+    }
     console.log('PatablesAsync uri', uri)
     this.setState({ isLoading: true }, () => {
       axios.get(uri, this.props.config)
@@ -56,23 +63,23 @@ export default class PatablesAsync extends Component {
           console.log('PatablesAsync jokes from API', response)
 
           let finalData = { ...response } // loop over dataPath to access the data at the correct location
-          this.props.dataPath && this.props.dataPath.forEach(key => {
+          this.props.pathToData && this.props.pathToData.forEach(key => {
             finalData = finalData[key]
           })
           console.log('finalRes', finalData)
 
           let finalPageTotal = { ...response }
-          if (this.props.pageTotalPath) { // if an array is passed in as pageTotalPath, loop over pageTotalPath to access page total
-            this.props.pageTotalPath.forEach(key => {
+          if (this.props.pathToPageTotal) { // if an array is passed in as pageTotalPath, loop over pageTotalPath to access page total
+            this.props.pathToPageTotal.forEach(key => {
               finalPageTotal = finalPageTotal[key]
             })
           }
           console.log('final page total', finalPageTotal)
 
-          this.setState((prevState) => ({
+          this.setState({
             visibleData: finalData,
-            totalPages: typeof finalPageTotal !== 'number' ? prevState.totalPages : finalPageTotal
-          }))
+            totalPages: typeof finalPageTotal !== 'number' ? 1 : finalPageTotal
+          })
         })
         .catch(err => {
           console.error('error:', err)
@@ -81,18 +88,6 @@ export default class PatablesAsync extends Component {
           this.setState({ isLoading: false })
         })
     })
-  }
-
-  // SORT ORDER
-  setColumnSortToggle = (e) => {
-    let sortColumn = e.target.getAttribute('name')
-    let sortOrder = this.state.sortOrder
-    if (sortColumn === this.state.sortColumn) {
-      sortOrder = sortOrder === 'asc' ? 'desc' : 'asc'
-    } else {
-      sortOrder = 'asc'
-    }
-    this.setState(() => ({ sortColumn, sortOrder }), this.getVisibleData)
   }
 
   // SEARCH BOX
@@ -105,7 +100,7 @@ export default class PatablesAsync extends Component {
     if (this.state.search && this.props.searchParam) {
       this.setState({ currentPage: 1 }, this.getVisibleData)
     } else {
-      console.warn('Cannot search without searchParam.')
+      console.warn('Warning🚨: Cannot search without searchParam.')
     }
   }
 
@@ -176,7 +171,6 @@ export default class PatablesAsync extends Component {
   getRenderProps = () => {
     return {
       ...this.state,
-      setColumnSortToggle: this.setColumnSortToggle,
       setPageNumber: this.setPageNumber,
       setResultSet: this.setResultSet,
       setSearchTerm: this.setSearchTerm,
@@ -215,20 +209,19 @@ PatablesAsync.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
   visibleData: PropTypes.array,
-  searchKeys: PropTypes.array,
   startingPage: PropTypes.number,
   resultSet: PropTypes.number,
-  sortColumn: PropTypes.string,
   sortOrder: PropTypes.string,
   pageNeighbors: PropTypes.number,
   url: PropTypes.string,
   config: PropTypes.object,
-  dataPath: PropTypes.array,
   apiKey: PropTypes.array,
-  pageTotalPath: PropTypes.array,
   pageParam: PropTypes.string,
   limitParam: PropTypes.string,
   searchParam: PropTypes.array,
   orderByParam: PropTypes.array,
-  sortParam: PropTypes.array
+  sortParam: PropTypes.array,
+  customParam: PropTypes.array,
+  pathToData: PropTypes.array,
+  pathToPageTotal: PropTypes.array
 }
