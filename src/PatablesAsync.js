@@ -10,6 +10,7 @@ export default class PatablesAsync extends Component {
     this.state = {
       visibleData: [],
       search: '',
+      sortColumn: this.props.sortColumn || '',
       currentPage: this.props.startingPage || 1,
       resultSet: this.props.resultSet || 5,
       sortOrder: this.props.orderByParam ? this.props.orderByParam[1] : 'asc',
@@ -25,6 +26,7 @@ export default class PatablesAsync extends Component {
 
   getVisibleData = () => {
     let uri = this.props.url
+
     if (this.props.pageParam) {
       uri = uriBuilder(uri, this.props.pageParam, this.state.currentPage)
     }
@@ -44,7 +46,7 @@ export default class PatablesAsync extends Component {
       uri = uriBuilder(uri, this.props.apiKey[0], this.props.apiKey[1])
     }
     if (this.props.sortParam) {
-      uri = uriBuilder(uri, this.props.sortParam[0], this.props.sortParam[1])
+      uri = uriBuilder(uri, this.props.sortParam[0], !this.state.sortColumn ? this.props.sortParam[1] : this.state.sortColumn)
     }
     if (this.props.orderByParam) {
       uri = uriBuilder(uri, this.props.orderByParam[0], this.state.sortOrder)
@@ -57,19 +59,20 @@ export default class PatablesAsync extends Component {
       })
     }
     console.log('PatablesAsync uri', uri)
+
     this.setState({ isLoading: true }, () => {
       axios.get(uri, this.props.config)
         .then(response => {
-          console.log('PatablesAsync jokes from API', response)
+          console.log('PatablesAsync results from API', response)
 
-          let finalData = { ...response } // loop over dataPath to access the data at the correct location
+          let finalData = { ...response } // loop over pathToData to access the data at the correct location
           this.props.pathToData && this.props.pathToData.forEach(key => {
             finalData = finalData[key]
           })
           console.log('finalRes', finalData)
 
           let finalPageTotal = { ...response }
-          if (this.props.pathToPageTotal) { // if an array is passed in as pageTotalPath, loop over pageTotalPath to access page total
+          if (this.props.pathToPageTotal) { // if an array is passed in as pathToPageTotal, loop over pathToPageTotal to access page total
             this.props.pathToPageTotal.forEach(key => {
               finalPageTotal = finalPageTotal[key]
             })
@@ -88,6 +91,17 @@ export default class PatablesAsync extends Component {
           this.setState({ isLoading: false })
         })
     })
+  }
+
+  setColumnSortToggle = (e) => {
+    let sortColumn = e.target.getAttribute('name')
+    let sortOrder = this.state.sortOrder
+    if (sortColumn === this.state.sortColumn) {
+      sortOrder = sortOrder === 'asc' ? 'desc' : 'asc'
+    } else {
+      sortOrder = 'asc'
+    }
+    this.setState(() => ({ sortColumn, sortOrder }), this.getVisibleData)
   }
 
   // SEARCH BOX
@@ -172,6 +186,7 @@ export default class PatablesAsync extends Component {
     return {
       ...this.state,
       setPageNumber: this.setPageNumber,
+      setColumnSortToggle: this.setColumnSortToggle,
       setResultSet: this.setResultSet,
       setSearchTerm: this.setSearchTerm,
       nextDisabled: this.state.totalPages === this.state.currentPage,
@@ -211,6 +226,7 @@ PatablesAsync.propTypes = {
   visibleData: PropTypes.array,
   startingPage: PropTypes.number,
   resultSet: PropTypes.number,
+  sortColumn: PropTypes.string,
   sortOrder: PropTypes.string,
   pageNeighbors: PropTypes.number,
   url: PropTypes.string,
