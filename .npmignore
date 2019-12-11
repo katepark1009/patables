@@ -1,5 +1,8 @@
 src/
 test/
+storybook/
+storybook-static/
+.storybook
 .npmignore
 .babelrc
 rollup.config.js

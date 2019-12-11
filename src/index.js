@@ -1,3 +1,3 @@
-import { Patables } from './Patables'
+import Patables from './Patables'
 
 export { Patables }
