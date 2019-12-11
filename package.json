@@ -36,7 +36,9 @@
     "build": "rollup -c -o dist/index.min.js",
     "lint": "./node_modules/eslint/bin/eslint.js .",
     "lint:fix": "./node_modules/eslint/bin/eslint.js . --fix",
-    "test": "jest --config=jest.config.js"
+    "test": "jest --config=jest.config.js",
+    "storybook": "start-storybook",
+    "build-storybook": "build-storybook -c .storybook"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
@@ -46,6 +48,11 @@
     "@babel/polyfill": "7.2.5",
     "@babel/preset-env": "7.3.4",
     "@babel/preset-react": "7.0.0",
+    "@storybook/react": "^5.2.8",
+    "@storybook/addon-info": "^5.1.9",
+    "@storybook/addon-knobs": "^5.1.9",
+    "@storybook/addons": "^5.2.1",
+    "@storybook/addon-storysource": "^5.2.6",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.0.1",
     "babel-jest": "23.6.0",
