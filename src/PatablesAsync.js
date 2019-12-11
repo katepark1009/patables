@@ -30,15 +30,9 @@ export default class PatablesAsync extends Component {
     if (this.props.pageParam) {
       uri = uriBuilder(uri, this.props.pageParam, this.state.currentPage)
     }
-    // } else {
-    //   console.warn(`pageParam not provided. pageParam:${this.props.pageParam}`)
-    // }
     if (this.props.limitParam) {
       uri = uriBuilder(uri, this.props.limitParam, this.state.resultSet)
     }
-    // } else {
-    //   console.warn(`limitParam not provided. limitParam:${this.props.limitParam}`)
-    // }
     if (this.props.searchParam) {
       uri = uriBuilder(uri, this.props.searchParam[0], !this.state.search ? this.props.searchParam[1] : this.state.search)
     }
@@ -51,33 +45,28 @@ export default class PatablesAsync extends Component {
     if (this.props.orderByParam) {
       uri = uriBuilder(uri, this.props.orderByParam[0], this.state.sortOrder)
     }
-    if (this.props.customParam) {
+    if (this.props.customParam) { 
       let param = this.props.customParam
       param.map(obj => {
         let paramVal = Object.values(obj)
         uri = uriBuilder(uri, paramVal[0], paramVal[1])
       })
     }
-    console.log('PatablesAsync uri', uri)
 
     this.setState({ isLoading: true }, () => {
       axios.get(uri, this.props.config)
         .then(response => {
-          console.log('PatablesAsync results from API', response)
-
-          let finalData = { ...response } // loop over pathToData to access the data at the correct location
+          let finalData = { ...response }
           this.props.pathToData && this.props.pathToData.forEach(key => {
             finalData = finalData[key]
           })
-          console.log('finalRes', finalData)
 
           let finalPageTotal = { ...response }
-          if (this.props.pathToPageTotal) { // if an array is passed in as pathToPageTotal, loop over pathToPageTotal to access page total
+          if (this.props.pathToPageTotal) { 
             this.props.pathToPageTotal.forEach(key => {
               finalPageTotal = finalPageTotal[key]
             })
           }
-          console.log('final page total', finalPageTotal)
 
           this.setState({
             visibleData: finalData,
