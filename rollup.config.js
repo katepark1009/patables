@@ -1,5 +1,6 @@
 import { uglify } from 'rollup-plugin-uglify'
 import babel from 'rollup-plugin-babel'
+import analyze from 'rollup-plugin-analyzer'
 import filesize from 'rollup-plugin-filesize'
 
 const config = {
@@ -16,6 +17,7 @@ const config = {
   plugins: [
     babel({ exclude: ['node_modules/**', 'storybook', 'storybook-static', '.storybook', 'test'] }),
     uglify(),
+    analyze(),
     filesize()
   ]
 }
