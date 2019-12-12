@@ -11,9 +11,9 @@ export default class PatablesAsync extends Component {
       visibleData: [],
       search: '',
       sortColumn: this.props.sortColumn || '',
-      currentPage: this.props.pageParam[1] || 1,
-      resultSet: this.props.limitParam[1] || 10,
-      sortOrder: this.props.orderByParam[1] || 'asc',
+      currentPage: this.props.startingPage || 1,
+      resultSet: this.props.resultSet || 5,
+      sortOrder: this.props.orderByParam ? this.props.orderByParam[1] : 'asc',
       pageNeighbors: this.props.pageNeighbors || 2,
       totalPages: 1,
       isLoading: false
@@ -28,10 +28,10 @@ export default class PatablesAsync extends Component {
     let uri = this.props.url
 
     if (this.props.pageParam) {
-      uri = uriBuilder(uri, this.props.pageParam[0], this.state.currentPage)
+      uri = uriBuilder(uri, this.props.pageParam, this.state.currentPage)
     }
     if (this.props.limitParam) {
-      uri = uriBuilder(uri, this.props.limitParam[0], this.state.resultSet)
+      uri = uriBuilder(uri, this.props.limitParam, this.state.resultSet)
     }
     if (this.props.searchParam) {
       uri = uriBuilder(uri, this.props.searchParam[0], !this.state.search ? this.props.searchParam[1] : this.state.search)
@@ -52,8 +52,6 @@ export default class PatablesAsync extends Component {
         uri = uriBuilder(uri, paramVal[0], paramVal[1])
       })
     }
-
-    console.log('URI', uri)
 
     this.setState({ isLoading: true }, () => {
       axios.get(uri, this.props.config)
@@ -214,13 +212,17 @@ export default class PatablesAsync extends Component {
 PatablesAsync.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
+  visibleData: PropTypes.array,
+  startingPage: PropTypes.number,
+  resultSet: PropTypes.number,
   sortColumn: PropTypes.string,
+  sortOrder: PropTypes.string,
   pageNeighbors: PropTypes.number,
   url: PropTypes.string,
   config: PropTypes.object,
   apiKey: PropTypes.array,
-  pageParam: PropTypes.array,
-  limitParam: PropTypes.array,
+  pageParam: PropTypes.string,
+  limitParam: PropTypes.string,
   searchParam: PropTypes.array,
   orderByParam: PropTypes.array,
   sortParam: PropTypes.array,
