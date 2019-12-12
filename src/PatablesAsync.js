@@ -11,9 +11,9 @@ export default class PatablesAsync extends Component {
       visibleData: [],
       search: '',
       sortColumn: this.props.sortColumn || '',
-      currentPage: this.props.pageParam[1] || 1,
-      resultSet: this.props.limitParam[1] || 10,
-      sortOrder: this.props.orderByParam[1] || 'asc',
+      currentPage: 1,
+      resultSet: 10,
+      sortOrder: 'asc',
       pageNeighbors: this.props.pageNeighbors || 2,
       totalPages: 1,
       isLoading: false
@@ -25,6 +25,16 @@ export default class PatablesAsync extends Component {
   }
 
   getVisibleData = () => {
+    if (this.props.pageParam && this.props.pageParam.length === 2) {
+      this.setState({ currentPage: this.props.pageParam[1] })
+    }
+    if (this.props.limitParam && this.props.limitParam.length === 2) {
+      this.setState({ resultSet: this.props.limitParam[1] })
+    }
+    if (this.props.orderByParam && this.props.orderByParam.length === 2) {
+      this.setState({ sortOrder: this.props.orderByParam[1] })
+    }
+
     let uri = this.props.url
 
     if (this.props.pageParam) {
@@ -53,7 +63,9 @@ export default class PatablesAsync extends Component {
       })
     }
 
-    console.log('URI', uri)
+    // if (this.props.showURI) {
+      console.log('The URI is:', uri)
+    // }
 
     this.setState({ isLoading: true }, () => {
       axios.get(uri, this.props.config)
@@ -226,5 +238,6 @@ PatablesAsync.propTypes = {
   sortParam: PropTypes.array,
   customParam: PropTypes.array,
   pathToData: PropTypes.array,
-  pathToPageTotal: PropTypes.array
+  pathToPageTotal: PropTypes.array,
+  // showURI: PropTypes.boolean
 }

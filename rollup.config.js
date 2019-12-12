@@ -13,7 +13,7 @@ const config = {
   },
   plugins: [
     babel({ exclude: 'node_modules/**' }),
-    uglify()
+    // uglify()
   ]
 }
 
