@@ -10,10 +10,10 @@ export default class PatablesAsync extends Component {
     this.state = {
       visibleData: [],
       search: '',
-      sortColumn: this.props.sortColumn || '',
-      currentPage: 1,
-      resultSet: 10,
-      sortOrder: 'asc',
+      sortColumn: '',
+      currentPage: this.props.pageParam ? this.props.pageParam[1] : 1,
+      resultSet: this.props.limitParam ? this.props.limitParam[1] : '',
+      sortOrder: this.props.orderByParam ? this.props.orderByParam[1] : '',
       pageNeighbors: this.props.pageNeighbors || 2,
       totalPages: 1,
       isLoading: false
@@ -25,15 +25,15 @@ export default class PatablesAsync extends Component {
   }
 
   getVisibleData = () => {
-    if (this.props.pageParam && this.props.pageParam.length === 2) {
-      this.setState({ currentPage: this.props.pageParam[1] })
-    }
-    if (this.props.limitParam && this.props.limitParam.length === 2) {
-      this.setState({ resultSet: this.props.limitParam[1] })
-    }
-    if (this.props.orderByParam && this.props.orderByParam.length === 2) {
-      this.setState({ sortOrder: this.props.orderByParam[1] })
-    }
+    // if (this.props.pageParam && this.props.pageParam.length === 2) {
+    //   this.setState({ currentPage: this.props.pageParam[1] })
+    // }
+    // if (this.props.limitParam && this.props.limitParam.length === 2) {
+    //   this.setState({ resultSet: this.props.limitParam[1] })
+    // }
+    // if (this.props.orderByParam && this.props.orderByParam.length === 2) {
+    //   this.setState({ sortOrder: this.props.orderByParam[1] })
+    // }
 
     let uri = this.props.url
 
@@ -63,9 +63,10 @@ export default class PatablesAsync extends Component {
       })
     }
 
-    // if (this.props.showURI) {
+    // SHOULD WE INCLUDE THIS?
+    if (this.props.showURI) {
       console.log('The URI is:', uri)
-    // }
+    }
 
     this.setState({ isLoading: true }, () => {
       axios.get(uri, this.props.config)
@@ -226,7 +227,6 @@ export default class PatablesAsync extends Component {
 PatablesAsync.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
-  sortColumn: PropTypes.string,
   pageNeighbors: PropTypes.number,
   url: PropTypes.string,
   config: PropTypes.object,
@@ -239,5 +239,5 @@ PatablesAsync.propTypes = {
   customParam: PropTypes.array,
   pathToData: PropTypes.array,
   pathToPageTotal: PropTypes.array,
-  // showURI: PropTypes.boolean
+  showURI: PropTypes.boolean
 }
