@@ -10,7 +10,7 @@ export default class PatablesAsync extends Component {
     this.state = {
       visibleData: [],
       search: '',
-      sortColumn: this.props.sortColumn || '',
+      sortColumn: '',
       currentPage: this.props.pageParam ? this.props.pageParam[1] : 1,
       resultSet: this.props.limitParam ? this.props.limitParam[1] : '',
       sortOrder: this.props.orderByParam ? this.props.orderByParam[1] : '',
@@ -28,10 +28,10 @@ export default class PatablesAsync extends Component {
     let uri = this.props.url
 
     if (this.props.pageParam) {
-      uri = uriBuilder(uri, this.props.pageParam[1], this.state.currentPage)
+      uri = uriBuilder(uri, this.props.pageParam[0], this.state.currentPage)
     }
     if (this.props.limitParam) {
-      uri = uriBuilder(uri, this.props.limitParam[1], this.state.resultSet)
+      uri = uriBuilder(uri, this.props.limitParam[0], this.state.resultSet)
     }
     if (this.props.searchParam) {
       uri = uriBuilder(uri, this.props.searchParam[0], !this.state.search ? this.props.searchParam[1] : this.state.search)
@@ -51,6 +51,10 @@ export default class PatablesAsync extends Component {
         let paramVal = Object.values(obj)
         uri = uriBuilder(uri, paramVal[0], paramVal[1])
       })
+    }
+
+    if (this.props.showURI) {
+      console.log('The URI is:', uri)
     }
 
     this.setState({ isLoading: true }, () => {
@@ -212,18 +216,17 @@ export default class PatablesAsync extends Component {
 PatablesAsync.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
-  resultSet: PropTypes.number,
-  sortColumn: PropTypes.string,
   pageNeighbors: PropTypes.number,
   url: PropTypes.string,
   config: PropTypes.object,
   apiKey: PropTypes.array,
-  pageParam: PropTypes.string,
-  limitParam: PropTypes.string,
+  pageParam: PropTypes.array,
+  limitParam: PropTypes.array,
   searchParam: PropTypes.array,
   orderByParam: PropTypes.array,
   sortParam: PropTypes.array,
   customParam: PropTypes.array,
   pathToData: PropTypes.array,
-  pathToPageTotal: PropTypes.array
+  pathToPageTotal: PropTypes.array,
+  showURI: PropTypes.bool
 }
