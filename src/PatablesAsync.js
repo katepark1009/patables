@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { isFunction, uriBuilder } from './utils/helpers'
 import axios from 'axios'
-
 export default class PatablesAsync extends Component {
   constructor(props) {
     super(props)
@@ -26,7 +25,6 @@ export default class PatablesAsync extends Component {
 
   getVisibleData = () => {
     let uri = this.props.url
-
     if (this.props.pageParam) {
       uri = uriBuilder(uri, this.props.pageParam[0], this.state.currentPage)
     }
@@ -45,14 +43,13 @@ export default class PatablesAsync extends Component {
     if (this.props.orderByParam) {
       uri = uriBuilder(uri, this.props.orderByParam[0], this.state.sortOrder)
     }
-    if (this.props.customParam) { 
+    if (this.props.customParam) {
       let param = this.props.customParam
       param.map(obj => {
         let paramVal = Object.values(obj)
         uri = uriBuilder(uri, paramVal[0], paramVal[1])
       })
     }
-
     if (this.props.showURI) {
       console.log('The URI is:', uri)
     }
@@ -86,17 +83,6 @@ export default class PatablesAsync extends Component {
     })
   }
 
-  setColumnSortToggle = (e) => {
-    let sortColumn = e.target.getAttribute('name')
-    let sortOrder = this.state.sortOrder
-    if (sortColumn === this.state.sortColumn) {
-      sortOrder = sortOrder === 'asc' ? 'desc' : 'asc'
-    } else {
-      sortOrder = 'asc'
-    }
-    this.setState(() => ({ sortColumn, sortOrder }), this.getVisibleData)
-  }
-
   // SEARCH BOX
   setSearchTerm = (e) => {
     let search = e.target.value
@@ -116,6 +102,17 @@ export default class PatablesAsync extends Component {
       search: '',
       currentPage: 1
     }, this.getVisibleData)
+  }
+
+  setColumnSortToggle = (e) => {
+    let sortColumn = e.target.getAttribute('name')
+    let sortOrder = this.state.sortOrder
+    if (sortColumn === this.state.sortColumn) {
+      sortOrder = sortOrder === 'asc' ? 'desc' : 'asc'
+    } else {
+      sortOrder = 'asc'
+    }
+    this.setState(() => ({ sortColumn, sortOrder }), this.getVisibleData)
   }
 
   // CURRENT PAGE
@@ -138,12 +135,10 @@ export default class PatablesAsync extends Component {
   range = (start, end, step = 1) => {
     let i = start
     const range = []
-
     while (i <= end) {
       range.push(i)
       i += step
     }
-
     return range
   }
 
@@ -151,10 +146,8 @@ export default class PatablesAsync extends Component {
     const { currentPage, totalPages, pageNeighbors } = this.state
     const totalNumbers = (pageNeighbors * 2) + 1
     let pages = []
-
     if (totalPages > totalNumbers) {
       let startPage, endPage
-
       if (currentPage <= (pageNeighbors + 1)) {
         startPage = 1
         endPage = (pageNeighbors * 2) + 1
@@ -165,12 +158,10 @@ export default class PatablesAsync extends Component {
         startPage = currentPage - pageNeighbors
         endPage = currentPage + pageNeighbors
       }
-
       pages = this.range(startPage, endPage)
     } else {
       pages = this.range(1, totalPages)
     }
-
     return pages
   }
 
@@ -193,7 +184,6 @@ export default class PatablesAsync extends Component {
   render() {
     const { children, render } = this.props
     const renderProps = this.getRenderProps()
-
     const renderComp = () => {
       if (render && isFunction(render)) {
         return render(renderProps)
@@ -204,7 +194,6 @@ export default class PatablesAsync extends Component {
         return undefined
       }
     }
-
     return (
       <div>
         {renderComp()}
@@ -216,6 +205,7 @@ export default class PatablesAsync extends Component {
 PatablesAsync.propTypes = {
   children: PropTypes.func,
   render: PropTypes.func,
+  startingPage: PropTypes.number,
   pageNeighbors: PropTypes.number,
   url: PropTypes.string,
   config: PropTypes.object,
