@@ -167,7 +167,7 @@ export default Users
 |customParam      |Array      	|[{ param: 'foo', value: 'bar' }]       |         |          |
 |pathToData       |Array      	|['data', 'users']                      |         |          |
 |pathToPageTotal  |Array      	|['data', 'page_total']                 |         |          |
-|showURI          |String      	|`true`                                 |         |          |
+|showURI          |Boolean     	|`true`                                 |         |          |
  
 
 #### render
@@ -398,6 +398,7 @@ This is a boolean value that allows you to console.log the URI that PatablesAsyn
   }} /> 
 ```
 Console logs out the message: The URI is: `https://myAPI.com/api/v1/users?query_term=foo`
+
 
 ## The "props"
 The render function as we learned in the previous section is handed a set of methods and values in the form of "props". These props are tools you can use within your JSX to make your life easier. Lets take a look at what you're given.
