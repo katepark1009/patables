@@ -423,7 +423,7 @@ The render function as we learned in the previous section is handed a set of met
 |isLoading            |Boolean      |
 
 #### currentPage
-currentPage is the active (or current) page number that the user is on. Great for applying the active class in pagination
+currentPage is the active (or current) page number that the user is on. Great for applying the active class in pagination.
 
 ```js
 {props.paginationButtons.map((page, i) => {
@@ -436,7 +436,7 @@ currentPage is the active (or current) page number that the user is on. Great fo
 ```
 
 #### nextDisabled / prevDisabled
-In pagination its common to have a next / previous buttons. `nextDisabled` and `prevDisabled` lets you know if your next or previous buttons ought to be disabled or made invisible as you'll see in my example below.
+In pagination, it's common to have next / previous buttons. `nextDisabled` and `prevDisabled` lets you know if your next or previous buttons ought to be disabled or made invisible as you'll see in my example below.
 
 ```js
 <ul className='pagination rounded-flat pagination-primary d-flex justify-content-center'>
@@ -478,68 +478,11 @@ paginationButtons is an array of the page numbers you need to display in your pa
 
 
 #### resultSet
-resultSet is how many items will be returned in our [visibleData](#visibledata) array. The default value is 10 however when creating your instance of `<PatablesAsync />`. You can pass in a new default with `limitParam` array like `<PatablesAsync limitParam={['limit', '5']}>`. If you want to let your user specify the result set then please use the [setResultSet](#setresultset) method
-
-
-#### search / setSearchTerm
-these two go hand in hand as `setSearchTerm` will be the method you use to set the value for `search`.  Both of these values will be passed back in props and can be used like this in your `renderTable` method:
-
-```js
-<div className='form-row mb-3'>
-  <input
-    className='form-control'
-    placeholder='Search...'
-    value={props.search}
-    onChange={props.setSearchTerm}/>
-</div>
-```
-
-#### clearSearch
-`clearSearch` method will set `search` value as empty string and reset `currentPage` to 1. You can use this method to reset the search keyword and reset search term from query string before sending another request to server.
-
-```js
-<div className='form-row mb-3'>
-  <input
-    className="form-control col-5"
-    placeholder="Search..."
-    value={props.search}
-    onChange={props.setSearchTerm}
-  />
-  <button onClick={props.submitSearch}>Submit</button>
-  <button onClick={props.clearSearch}>Reset</button>
-</div>
-```
-
-#### setColumnSortToggle
-Sorting a table by its columns is a common action a user expects to take. This method requires you set a `name` attribute on the `<th />` tag that is equal to the `key` that that column is displaying. This method toggles between 'asc' and 'desc' orders.
-
-```js
-let data = [
-  {
-    firstName: 'Michael',
-    lastName: 'Scott',
-    dob: '03-15-1964',
-    occupation: 'The Boss',
-  }
-]
-
-<thead className='bg-primary text-white'>
-  <tr>
-    <th name='firstName' onClick={props.setColumnSortToggle}>FirstName</th>
-    <th name='lastName' onClick={props.setColumnSortToggle}>LastName</th>
-    <th name='dob' onClick={props.setColumnSortToggle}>Date Of Birth</th>
-    <th name='occupation' onClick={props.setColumnSortToggle}>Occupation</th>
-  </tr>
-</thead>
-```
-
-
-#### setPageNumber
-This method allows you to set a new `currentPage` within your pagination. Examples of this method can be found above.
+resultSet is how many items will be returned in our [visibleData](#visibledata) array. The default value is whatever your API wants to send.  You can pass in a new value with the `limitParam` array: `<PatablesAsync limitParam={['limit', '5']}>`.
 
 
 #### setResultSet
-Sometimes you want to give your user the flexibility of setting how many results they wish to see in a given table. This method allows you to give them the ability to do just that.
+Sometimes you want to give your user the flexibility of setting how many results they wish to see in a given table. This method allows you to give them the ability to do just that. You'll need to have a limitParam array for this method to work.
 
 ```js
 <div className='form-inline'>
@@ -556,20 +499,77 @@ Sometimes you want to give your user the flexibility of setting how many results
 ```
 
 
-#### sortColumn
-If you wish to show your user which column is being sorted this value is being passed back to you so you can manage your css accordingly.
+#### search / setSearchTerm
+These two go hand in hand as `setSearchTerm` will be the method you use to set the value for `search`.  Both of these values will be passed back in props and can be used like this in your `renderTable` method:
+
+```js
+<div className='form-row mb-3'>
+  <input
+    className='form-control'
+    placeholder='Search...'
+    value={props.search}
+    onChange={props.setSearchTerm}/>
+</div>
+```
+
+#### submitSearch / clearSearch
+Use the `submitSearch` method to kick off an API call to fetch your results based on your `search` value.  The `clearSearch` method will set the `search` value as an empty string inside your `searchParam` array and reset `currentPage` to 1. You can use this method to reset the `search` value to an empty string, and the API will automatically re-fetch the results.
+
+```js
+<div className='form-row mb-3'>
+  <input
+    className="form-control col-5"
+    placeholder="Search..."
+    value={props.search}
+    onChange={props.setSearchTerm}
+  />
+  <button onClick={props.submitSearch}>Submit</button>
+  <button onClick={props.clearSearch}>Reset</button>
+</div>
+```
 
 
 #### sortOrder
 If you wish to show your user in which direction the column is being sorted this value is being passed back to you so you can manage your css accordingly.
 
+#### sortColumn
+If you wish to show your user which column is being sorted this value is being passed back to you so you can manage your css accordingly.
+
+
+#### setColumnSortToggle
+Sorting a table by its columns is a common action a user expects to take. This method allows you set a `name` attribute on the `<th />` tag that is equal to value you wish to sort by for `sortParam` (ex: firstName).  Internally, PatablesAsync will fetch fresh results using your sortColumn AND sortOrder values (ex: sorting firstName in ascending order).  If you click repeatedly on a column, this method toggles between 'asc' and 'desc' orders.
+
+```js
+let data = [
+  {
+    firstName: 'Michael',
+    lastName: 'Scott',
+    dob: '03-15-1964',
+    occupation: 'The Boss',
+  }
+]
+
+<thead className='bg-primary text-white'>
+  <tr>
+    <th name='firstName' onClick={props.setColumnSortToggle}>FirstName</th>
+    <th name='lastName' onClick={props.setColumnSortToggle}>LastName</th>
+    <th name='dob' >Date Of Birth</th>
+    <th name='occupation' >Occupation</th>
+  </tr>
+</thead>
+```
+
+
+#### setPageNumber
+This method allows you to set a new `currentPage` within your pagination. Examples of this method can be found above.
+
 
 #### totalPages
-totalPages is a derived value from `initialData / resultSet`. If you wish to tell your user how many pages they potentially need to paginate through then this is your value.
+totalPages comes from your API or defaults to 1 (which disables pagination). If you wish to tell your user how many pages they potentially need to paginate through then this is your value.
 
 
 #### visibleData
-`visibleData` is the data you will want to render onto the screen. This data has gone through all of the sorting and filtering.
+`visibleData` is the data you will want to render onto the screen. This data has gone through all of the sorting and filtering via your API.
 
 ```js
 <tbody>
@@ -587,4 +587,4 @@ totalPages is a derived value from `initialData / resultSet`. If you wish to tel
 ```
 
 #### isLoading
-`isLoading` is a boolean value indicating whether the `<PatablesAsync>` is currently loading content. It's default to `false`. When you make a request with `<PatablesAsync>`, it becomes `true` until the request is completed.
+`isLoading` is a boolean value indicating whether the `<PatablesAsync>` is currently loading content. It's default to `false`. When you make a request with `<PatablesAsync>`, it becomes `true` until the request is completed. Use this to render a loading screen.
