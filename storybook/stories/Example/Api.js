@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import api from './api.json'
+import api from './data/api.json'
 import { Patables } from '../../../src/index'
 import { Pagination, SortArrow } from 'honeybee-ui'
 
@@ -49,16 +49,16 @@ class Api extends Component {
           <table className='table table-hover mb-4'>
             <thead className='bg-primary text-white text-center'>
               <tr>
-                <th name='prop' onClick={props.setColumnSortToggle} style={{ width: '15%' }}>
+                <th name='prop' onClick={props.setColumnSortToggle} style={{ width: '20%' }}>
                   Prop  <SortArrow name='prop' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
                 </th>
-                <th name='type' onClick={props.setColumnSortToggle} style={{ width: '10%' }}>
+                <th name='type' onClick={props.setColumnSortToggle} style={{ width: '15%' }}>
                   Type  <SortArrow name='type' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
                 </th>
                 <th name='example' style={{ width: '15%' }}>Example</th>
                 <th name='default' style={{ width: '15%' }}>Default</th>
-                <th name='required' style={{ width: '10%' }}>Required</th>
-                <th name='link' style={{ width: '15%' }}>Link to docs</th>
+                <th name='required' style={{ width: '15%' }}>Required</th>
+                <th name='link' style={{ width: '20%' }}>Link to docs</th>
               </tr>
             </thead>
             <tbody className='text-center'>

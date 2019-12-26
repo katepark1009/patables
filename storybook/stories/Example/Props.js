@@ -1,19 +1,19 @@
 import React, { Component } from 'react'
-import data from './data/data.json'
+import props from './data/props.json'
 import { Patables } from '../../../src/index'
 import { Pagination, SortArrow } from 'honeybee-ui'
 
-class ExampleTable extends Component {
+class Props extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      users: []
+      props: []
     }
   }
 
   componentDidMount() {
-    this.setState(() => ({ users: data }))
+    this.setState(() => ({ props: props }))
   }
 
   render() {
@@ -49,36 +49,22 @@ class ExampleTable extends Component {
           <table className='table table-hover mb-4'>
             <thead className='bg-primary text-white text-center'>
               <tr>
-                <th name='id' onClick={props.setColumnSortToggle} style={{ width: '8%' }}>
-                  id  <SortArrow name='id' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
+                <th name='prop' onClick={props.setColumnSortToggle} style={{ width: '20%' }}>
+                  Prop  <SortArrow name='prop' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
                 </th>
-                <th name='firstname' onClick={props.setColumnSortToggle} style={{ width: '15%' }}>
-                  FirstName  <SortArrow name='firstname' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
+                <th name='type' onClick={props.setColumnSortToggle} style={{ width: '20%' }}>
+                  Type  <SortArrow name='type' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
                 </th>
-                <th name='lastname' onClick={props.setColumnSortToggle} style={{ width: '15%' }}>
-                  LastName  <SortArrow name='lastname' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
-                </th>
-                <th name='dob' onClick={props.setColumnSortToggle} style={{ width: '15%' }}>
-                  Date Of Birth <SortArrow name='dob' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
-                </th>
-                <th name='occupation' onClick={props.setColumnSortToggle} style={{ width: '20%' }}>
-                  Occupation  <SortArrow name='occupation' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
-                </th>
-                <th name='phone' onClick={props.setColumnSortToggle} style={{ width: '10%' }}>
-                  Phone  <SortArrow name='phone' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
-                </th>
+                <th name='link' style={{ width: '15%' }}>Link to docs</th>
               </tr>
             </thead>
             <tbody className='text-center'>
-              {props.visibleData.map((user, i) => {
+              {props.visibleData.map((v, i) => {
                 return (
                   <tr key={i}>
-                    <td>{user.id}</td>
-                    <td>{user.firstname}</td>
-                    <td>{user.lastname}</td>
-                    <td>{user.dob}</td>
-                    <td>{user.occupation}</td>
-                    <td>{user.phone}</td>
+                    <td>{v.prop}</td>
+                    <td>{v.type}</td>
+                    <td><a className='btn btn-outline-info' href={v.link} target='_blank' rel='noreferrer noopener'>More info</a></td>
                   </tr>
                 )
               })}
@@ -103,11 +89,11 @@ class ExampleTable extends Component {
             <div>
               <Patables
                 render={renderTable}
-                initialData={this.state.users}
-                resultSet={5}
-                sortColumn='firstname'
-                sortOrder='desc'
-                searchKeys={['firstname', 'lastname', 'id']}
+                initialData={this.state.props}
+                resultSet={10}
+                sortColumn='prop'
+                sortOrder='asc'
+                searchKeys={['prop']}
               />
             </div>
           </div>
@@ -117,4 +103,4 @@ class ExampleTable extends Component {
   }
 }
 
-export default ExampleTable
+export default Props

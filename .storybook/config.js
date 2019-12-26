@@ -8,8 +8,6 @@ const style = {
 }　
 //Default header
 const storybookStyling = (storyFn) => {
-  const { props } = storyFn()
-  // let storyComponent = props.children.length? '': props.context.name
   return (
     <div>
       <div>

@@ -1,0 +1,65 @@
+[{
+    "prop": "currentPage",
+    "type": "Number",
+    "link": "https://www.npmjs.com/package/patables#currentpage"
+},{
+    "prop": "initialData",
+    "type": "Array",
+    "link": "https://www.npmjs.com/package/patables#initialdata-1"
+},{
+    "prop": "nextDisabled",
+    "type": "Boolean",
+    "link": "https://www.npmjs.com/package/patables#nextdisabled--prevdisabled"
+},{
+    "prop": "prevDisabled",
+    "type": "Boolean",
+    "link": "https://www.npmjs.com/package/patables#nextdisabled--prevdisabled"
+},{
+    "prop": "pageNeighbors",
+    "type": "Number",
+    "link": "https://www.npmjs.com/package/patables#pageneighbors-1"
+},{
+    "prop": "paginationButtons",
+    "type": "Array",
+    "link": "https://www.npmjs.com/package/patables#paginationbuttons"
+},{
+    "prop": "resultSet",
+    "type": "Number",
+    "link": "https://www.npmjs.com/package/patables#resultset-1"
+},{
+    "prop": "search",
+    "type": "String",
+    "link": "https://www.npmjs.com/package/patables#search--setsearchterm"
+},{
+    "prop": "setSearchTerm",
+    "type": "Function",
+    "link": "https://www.npmjs.com/package/patables#search--setsearchterm"
+},{
+    "prop": "setColumnSortToggle",
+    "type": "Function",
+    "link": "https://www.npmjs.com/package/patables#setcolumnsorttoggle"
+},{
+    "prop": "setPageNumber",
+    "type": "Function",
+    "link": "https://www.npmjs.com/package/patables#setpagenumber"
+},{
+    "prop": "setResultSet",
+    "type": "Function",
+    "link": "https://www.npmjs.com/package/patables#setresultset"
+},{
+    "prop": "sortColumn",
+    "type": "String",
+    "link": "https://www.npmjs.com/package/patables#sortcolumn-1"
+},{
+    "prop": "sortOrder",
+    "type": "String",
+    "link": "https://www.npmjs.com/package/patables#sortorder-1"
+},{
+    "prop": "totalPages",
+    "type": "Number",
+    "link": "https://www.npmjs.com/package/patables#totalpages"
+},{
+    "prop": "visibleData",
+    "type": "Array",
+    "link": "https://www.npmjs.com/package/patables#visibledata"
+}]
