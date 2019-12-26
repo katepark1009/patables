@@ -1,0 +1,57 @@
+[{
+    "prop": "render",
+    "type": "Function",
+    "example": "(props) => {}",
+    "default": "",
+    "required": "true",
+    "link": "https://www.npmjs.com/package/patables#render"
+},{
+    "prop": "initialData",
+    "type": "Array",
+    "example": "[{...},{...},{...}]",
+    "default": "",
+    "required": "true",
+    "link": "https://www.npmjs.com/package/patables#initialdata"
+},{
+    "prop": "searchKeys",
+    "type": "Array",
+    "example": "['firstName']",
+    "default": "all keys",
+    "required": "",
+    "link": "https://www.npmjs.com/package/patables#searchkeys"
+},{
+    "prop": "sortColumn",
+    "type": "String",
+    "example": "firstName",
+    "default": "",
+    "required": "",
+    "link": "https://www.npmjs.com/package/patables#sortcolumn"
+},{
+    "prop": "sortOrder",
+    "type": "String",
+    "example": "desc",
+    "default": "asc",
+    "required": "",
+    "link": "https://www.npmjs.com/package/patables#sortorder"
+},{
+    "prop": "startingPage",
+    "type": "Number",
+    "example": 2,
+    "default": 1,
+    "required": "",
+    "link": "https://www.npmjs.com/package/patables#startingpage"
+},{
+    "prop": "pageNeighbors",
+    "type": "Number",
+    "example": 3,
+    "default": 2,
+    "required": "",
+    "link": "https://www.npmjs.com/package/patables#pageneighbors"
+},{
+    "prop": "resultSet",
+    "type": "Number",
+    "example": 5,
+    "default": 10,
+    "required": "",
+    "link": "https://www.npmjs.com/package/patables#resultset"
+}]
