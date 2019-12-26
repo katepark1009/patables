@@ -9,11 +9,11 @@ const style = {
 //Default header
 const storybookStyling = (storyFn) => {
   const { props } = storyFn()
-  let storyComponent = props.children.length? '': props.context.name
+  // let storyComponent = props.children.length? '': props.context.name
   return (
     <div>
       <div>
-      <h2 style={style}> {storyComponent? `${storyComponent}`: 'PaTables '}</h2>
+      <h2 style={style}>PaTables</h2>
         <hr/>
         { storyFn() }
       </div>
