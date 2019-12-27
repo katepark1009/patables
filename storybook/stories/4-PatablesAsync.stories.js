@@ -1,12 +1,12 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import ExampleAsync from './Example/ExampleAsync'
+import ExamplePatablesAsync from './Example/ExampleAsync'
 
-const stories = storiesOf('PaTables', module)
+const stories = storiesOf('PatablesAsync', module)
 stories
-  .add('PaTablesAsync', () => {
+  .add('Example', () => {
     return (
-      <ExampleAsync />
+      <ExamplePatablesAsync />
     )
   }, {
     info: {

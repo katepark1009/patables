@@ -11,8 +11,8 @@ const StyledSection = styled.div`
   margin: 0 25px;
 `
 
-storiesOf('Welcome', module).add('to Storybook', () => (
-  <StyledSection className='col-10'>
+const Welcome = () => (
+  <div>
     <img src='https://badge.fury.io/js/patables.svg' alt='badge' />
     <Title> Welcome to 'PaTables' Storybook</Title>
     <p>Can't find an easy way to organize your table data without sacrificing all the design? Neither could we.</p>
@@ -23,9 +23,15 @@ storiesOf('Welcome', module).add('to Storybook', () => (
       <li><a href='https://www.npmjs.com/package/patables#docs'>Official Docs</a></li>
       <li><a href='https://github.com/williampruden/patables'>Github</a></li>
     </ul>
-  </StyledSection>
-), {
-  info: {
-    disable: true
-  }
-})
+  </div>
+)
+
+const stories = storiesOf('Welcome', module)
+stories
+  .add('to Storybook', () => {
+    return (
+      <StyledSection className='col-10'>
+        <Welcome />
+      </StyledSection>
+    )
+  })

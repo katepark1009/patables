@@ -3,7 +3,7 @@ import data from './data/data.json'
 import { Patables } from '../../../src/index'
 import { Pagination, SortArrow } from 'honeybee-ui'
 
-class ExampleTable extends Component {
+class ExamplePatables extends Component {
   constructor(props) {
     super(props)
 
@@ -47,9 +47,9 @@ class ExampleTable extends Component {
             </div>
           </div>
           <table className='table table-hover mb-4'>
-            <thead className='bg-primary text-white text-center'>
+            <thead className='bg-info text-white text-center'>
               <tr>
-                <th name='id' onClick={props.setColumnSortToggle} style={{ width: '8%' }}>
+                <th name='id' onClick={props.setColumnSortToggle} style={{ width: '7%' }}>
                   id  <SortArrow name='id' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
                 </th>
                 <th name='firstname' onClick={props.setColumnSortToggle} style={{ width: '15%' }}>
@@ -64,7 +64,7 @@ class ExampleTable extends Component {
                 <th name='occupation' onClick={props.setColumnSortToggle} style={{ width: '20%' }}>
                   Occupation  <SortArrow name='occupation' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
                 </th>
-                <th name='phone' onClick={props.setColumnSortToggle} style={{ width: '10%' }}>
+                <th name='phone' onClick={props.setColumnSortToggle} style={{ width: '13%' }}>
                   Phone  <SortArrow name='phone' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
                 </th>
               </tr>
@@ -117,4 +117,4 @@ class ExampleTable extends Component {
   }
 }
 
-export default ExampleTable
+export default ExamplePatables

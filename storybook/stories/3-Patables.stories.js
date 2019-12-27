@@ -1,12 +1,12 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import ExampleTable from './Example/Example'
+import ExamplePatables from './Example/Example'
 
 const stories = storiesOf('PaTables', module)
 stories
-  .add('PaTables', () => {
+  .add('Examples', () => {
     return (
-      <ExampleTable />
+      <ExamplePatables />
     )
   }, {
     info: {

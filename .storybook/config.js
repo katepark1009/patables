@@ -8,10 +8,11 @@ const style = {
 }　
 //Default header
 const storybookStyling = (storyFn) => {
+  const { props } = storyFn()
   return (
     <div>
       <div>
-      <h2 style={style}>PaTables</h2>
+      <h2 style={style}>{props.context.kind === 'Welcome' ? 'PaTables' : `${props.context.kind} : ${props.context.story}`}</h2>
         <hr/>
         { storyFn() }
       </div>

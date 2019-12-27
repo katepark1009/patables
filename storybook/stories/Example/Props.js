@@ -47,7 +47,7 @@ class Props extends Component {
             </div>
           </div>
           <table className='table table-hover mb-4'>
-            <thead className='bg-primary text-white text-center'>
+            <thead className='bg-secondary text-white text-center'>
               <tr>
                 <th name='prop' onClick={props.setColumnSortToggle} style={{ width: '20%' }}>
                   Prop  <SortArrow name='prop' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />

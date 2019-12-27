@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PatablesAsync from './PatablesAsync-copy' // should be replaced later
 import { Loading, SortArrow } from 'honeybee-ui'
 
-class ExampleAsync extends Component {
+class ExamplePatablesAsync extends Component {
   constructor(props) {
     super(props)
 
@@ -115,4 +115,4 @@ class ExampleAsync extends Component {
   }
 }
 
-export default ExampleAsync
+export default ExamplePatablesAsync
