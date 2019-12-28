@@ -86,7 +86,7 @@ class PatablesAsyncProps extends Component {
     return (
       <div className='mt-5'>
         <div className='row'>
-          <div className='col-5 ml-5'>
+          <div className='col-6 ml-5'>
             <div>
               <Patables
                 render={renderTable}
