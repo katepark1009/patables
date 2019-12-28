@@ -1,19 +1,19 @@
 import React, { Component } from 'react'
-import api from './data/api.json'
-import { Patables } from '../../../src/index'
+import propsAsync from '../data/propsAsync.json'
+import { Patables } from '../../../../src/index'
 import { Pagination, SortArrow } from 'honeybee-ui'
 
-class Api extends Component {
+class PatablesAsyncProps extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      api: []
+      props: []
     }
   }
 
   componentDidMount() {
-    this.setState(() => ({ api: api }))
+    this.setState(() => ({ props: propsAsync }))
   }
 
   render() {
@@ -47,18 +47,15 @@ class Api extends Component {
             </div>
           </div>
           <table className='table table-hover mb-4'>
-            <thead className='bg-secondary text-white text-center'>
+            <thead className='bg-dark text-white text-center'>
               <tr>
                 <th name='prop' onClick={props.setColumnSortToggle} style={{ width: '20%' }}>
                   Prop  <SortArrow name='prop' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
                 </th>
-                <th name='type' onClick={props.setColumnSortToggle} style={{ width: '15%' }}>
+                <th name='type' onClick={props.setColumnSortToggle} style={{ width: '20%' }}>
                   Type  <SortArrow name='type' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
                 </th>
-                <th name='example' style={{ width: '15%' }}>Example</th>
-                <th name='default' style={{ width: '15%' }}>Default</th>
-                <th name='required' style={{ width: '15%' }}>Required</th>
-                <th name='link' style={{ width: '20%' }}>Link to docs</th>
+                <th name='link' style={{ width: '15%' }}>Link to docs</th>
               </tr>
             </thead>
             <tbody className='text-center'>
@@ -67,10 +64,8 @@ class Api extends Component {
                   <tr key={i}>
                     <td>{v.prop}</td>
                     <td>{v.type}</td>
-                    <td>{v.example}</td>
-                    <td>{v.default}</td>
-                    <td>{v.required}</td>
-                    <td><a className='btn btn-outline-info' href={v.link} target='_blank' rel='noreferrer noopener'>More info</a></td>
+                    <td></td>
+                    {/* <td><a className='btn btn-outline-info' href={v.link} target='_blank' rel='noreferrer noopener'>More info</a></td> */}
                   </tr>
                 )
               })}
@@ -91,11 +86,11 @@ class Api extends Component {
     return (
       <div className='mt-5'>
         <div className='row'>
-          <div className='col-11 ml-5'>
+          <div className='col-5 ml-5'>
             <div>
               <Patables
                 render={renderTable}
-                initialData={this.state.api}
+                initialData={this.state.props}
                 resultSet={10}
                 sortColumn='prop'
                 sortOrder='asc'
@@ -109,4 +104,4 @@ class Api extends Component {
   }
 }
 
-export default Api
+export default PatablesAsyncProps

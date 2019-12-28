@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { isFunction, uriBuilder } from './helpers'
+import { isFunction, uriBuilder } from '../utils/helpers'
 import axios from 'axios'
 
 export default class PatablesAsync extends Component {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import ExamplePatables from './Example/Example'
+import ExamplePatables from './Example/Patables/Example'
 
 const stories = storiesOf('Patables', module)
 stories

@@ -13,7 +13,6 @@ class ExamplePatablesAsync extends Component {
 
   render() {
     const renderTable = props => {
-      console.log('5) props from PatablesAsync:', props);
       return (
         <div>
           <div className='form-row mb-3'>
@@ -88,7 +87,7 @@ class ExamplePatablesAsync extends Component {
     return (
       <div className='my-5'>
         <div className='row'>
-          <div className='col-10 ml-5'>
+          <div className='col-8 ml-5'>
             <div>
               <PatablesAsync
                 render={renderTable}

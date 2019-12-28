@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import apiAsync from './data/apiAsync.json'
-import { Patables } from '../../../src/index'
+import apiAsync from '../data/apiAsync.json'
+import { Patables } from '../../../../src/index'
 import { Pagination, SortArrow } from 'honeybee-ui'
 
 class PatablesAsyncApi extends Component {
@@ -49,14 +49,14 @@ class PatablesAsyncApi extends Component {
           <table className='table table-hover mb-4'>
             <thead className='bg-secondary text-white text-center'>
               <tr>
-                <th name='prop' onClick={props.setColumnSortToggle} style={{ width: '20%' }}>
+                <th name='prop' onClick={props.setColumnSortToggle} style={{ width: '15%' }}>
                   Prop  <SortArrow name='prop' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
                 </th>
                 <th name='type' onClick={props.setColumnSortToggle} style={{ width: '15%' }}>
                   Type  <SortArrow name='type' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
                 </th>
-                <th name='example' style={{ width: '15%' }}>Example</th>
-                <th name='default' style={{ width: '15%' }}>Default</th>
+                <th name='example' style={{ width: '25%' }}>Example</th>
+                <th name='default' style={{ width: '10%' }}>Default</th>
                 <th name='required' style={{ width: '15%' }}>Required</th>
                 <th name='link' style={{ width: '20%' }}>Link to docs</th>
               </tr>
@@ -92,7 +92,7 @@ class PatablesAsyncApi extends Component {
     return (
       <div className='mt-5'>
         <div className='row'>
-          <div className='col-11 ml-5'>
+          <div className='col-9 ml-5'>
             <div>
               <Patables
                 render={renderTable}

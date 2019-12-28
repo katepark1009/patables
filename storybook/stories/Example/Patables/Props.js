@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import propsAsync from './data/propsAsync.json'
-import { Patables } from '../../../src/index'
+import props from '../data/props.json'
+import { Patables } from '../../../../src/index'
 import { Pagination, SortArrow } from 'honeybee-ui'
 
-class PatablesAsyncProps extends Component {
+class Props extends Component {
   constructor(props) {
     super(props)
 
@@ -13,7 +13,7 @@ class PatablesAsyncProps extends Component {
   }
 
   componentDidMount() {
-    this.setState(() => ({ props: propsAsync }))
+    this.setState(() => ({ props: props }))
   }
 
   render() {
@@ -47,7 +47,7 @@ class PatablesAsyncProps extends Component {
             </div>
           </div>
           <table className='table table-hover mb-4'>
-            <thead className='bg-secondary text-white text-center'>
+            <thead className='bg-dark text-white text-center'>
               <tr>
                 <th name='prop' onClick={props.setColumnSortToggle} style={{ width: '20%' }}>
                   Prop  <SortArrow name='prop' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
@@ -64,8 +64,7 @@ class PatablesAsyncProps extends Component {
                   <tr key={i}>
                     <td>{v.prop}</td>
                     <td>{v.type}</td>
-                    <td></td>
-                    {/* <td><a className='btn btn-outline-info' href={v.link} target='_blank' rel='noreferrer noopener'>More info</a></td> */}
+                    <td><a className='btn btn-outline-info' href={v.link} target='_blank' rel='noreferrer noopener'>More info</a></td>
                   </tr>
                 )
               })}
@@ -86,7 +85,7 @@ class PatablesAsyncProps extends Component {
     return (
       <div className='mt-5'>
         <div className='row'>
-          <div className='col-11 ml-5'>
+          <div className='col-5 ml-5'>
             <div>
               <Patables
                 render={renderTable}
@@ -104,4 +103,4 @@ class PatablesAsyncProps extends Component {
   }
 }
 
-export default PatablesAsyncProps
+export default Props

@@ -1,19 +1,19 @@
 import React, { Component } from 'react'
-import props from './data/props.json'
-import { Patables } from '../../../src/index'
+import data from '../data/data.json'
+import { Patables } from '../../../../src/index'
 import { Pagination, SortArrow } from 'honeybee-ui'
 
-class Props extends Component {
+class ExamplePatables extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      props: []
+      users: []
     }
   }
 
   componentDidMount() {
-    this.setState(() => ({ props: props }))
+    this.setState(() => ({ users: data }))
   }
 
   render() {
@@ -47,24 +47,38 @@ class Props extends Component {
             </div>
           </div>
           <table className='table table-hover mb-4'>
-            <thead className='bg-secondary text-white text-center'>
+            <thead className='bg-info text-white text-center'>
               <tr>
-                <th name='prop' onClick={props.setColumnSortToggle} style={{ width: '20%' }}>
-                  Prop  <SortArrow name='prop' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
+                <th name='id' onClick={props.setColumnSortToggle} style={{ width: '7%' }}>
+                  id  <SortArrow name='id' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
                 </th>
-                <th name='type' onClick={props.setColumnSortToggle} style={{ width: '20%' }}>
-                  Type  <SortArrow name='type' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
+                <th name='firstname' onClick={props.setColumnSortToggle} style={{ width: '15%' }}>
+                  FirstName  <SortArrow name='firstname' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
                 </th>
-                <th name='link' style={{ width: '15%' }}>Link to docs</th>
+                <th name='lastname' onClick={props.setColumnSortToggle} style={{ width: '15%' }}>
+                  LastName  <SortArrow name='lastname' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
+                </th>
+                <th name='dob' onClick={props.setColumnSortToggle} style={{ width: '15%' }}>
+                  Date Of Birth <SortArrow name='dob' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
+                </th>
+                <th name='occupation' onClick={props.setColumnSortToggle} style={{ width: '20%' }}>
+                  Occupation  <SortArrow name='occupation' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
+                </th>
+                <th name='phone' onClick={props.setColumnSortToggle} style={{ width: '13%' }}>
+                  Phone  <SortArrow name='phone' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />
+                </th>
               </tr>
             </thead>
             <tbody className='text-center'>
-              {props.visibleData.map((v, i) => {
+              {props.visibleData.map((user, i) => {
                 return (
                   <tr key={i}>
-                    <td>{v.prop}</td>
-                    <td>{v.type}</td>
-                    <td><a className='btn btn-outline-info' href={v.link} target='_blank' rel='noreferrer noopener'>More info</a></td>
+                    <td>{user.id}</td>
+                    <td>{user.firstname}</td>
+                    <td>{user.lastname}</td>
+                    <td>{user.dob}</td>
+                    <td>{user.occupation}</td>
+                    <td>{user.phone}</td>
                   </tr>
                 )
               })}
@@ -89,11 +103,11 @@ class Props extends Component {
             <div>
               <Patables
                 render={renderTable}
-                initialData={this.state.props}
-                resultSet={10}
-                sortColumn='prop'
-                sortOrder='asc'
-                searchKeys={['prop']}
+                initialData={this.state.users}
+                resultSet={5}
+                sortColumn='firstname'
+                sortOrder='desc'
+                searchKeys={['firstname', 'lastname', 'id']}
               />
             </div>
           </div>
@@ -103,4 +117,4 @@ class Props extends Component {
   }
 }
 
-export default Props
+export default ExamplePatables
