@@ -1,0 +1,69 @@
+[{
+    "prop": "currentPage",
+    "type": "Number",
+    "link": ""
+},{
+    "prop": "nextDisabled",
+    "type": "Boolean",
+    "link": ""
+},{
+    "prop": "pageNeighbors",
+    "type": "Number",
+    "link": ""
+},{
+    "prop": "paginationButtons",
+    "type": "Array",
+    "link": ""
+},{
+    "prop": "prevDisabled",
+    "type": "Boolean",
+    "link": ""
+},{
+    "prop": "resultSet",
+    "type": "Number",
+    "link": ""
+},{
+    "prop": "search",
+    "type": "String",
+    "link": ""
+},{
+    "prop": "setSearchTerm",
+    "type": "Function",
+    "link": ""
+},{
+    "prop": "clearSearch",
+    "type": "Function",
+    "link": ""
+},{
+    "prop": "setColumnSortToggle",
+    "type": "Function",
+    "link": ""
+},{
+    "prop": "setPageNumber",
+    "type": "Function",
+    "link": ""
+},{
+    "prop": "setResultSet",
+    "type": "Function",
+    "link": ""
+},{
+    "prop": "sortColumn",
+    "type": "String",
+    "link": ""
+},{
+    "prop": "sortOrder",
+    "type": "String",
+    "link": ""
+},{
+    "prop": "totalPages",
+    "type": "Number",
+    "link": ""
+},{
+    "prop": "visibleData",
+    "type": "Array",
+    "link": ""
+},{
+    "prop": "isLoading",
+    "type": "Boolean",
+    "link": ""
+}]

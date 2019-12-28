@@ -46,7 +46,7 @@ class ExamplePatablesAsync extends Component {
             </div>
           </div>
           <table className='table table-hover mb-4'>
-            <thead className='bg-primary text-white text-center'>
+            <thead className='bg-info text-white text-center'>
               <tr>
                 <th name='title' onClick={props.setColumnSortToggle} style={{ width: '20%' }}>
                   Title <SortArrow name='title' sortColumn={props.sortColumn} sortOrder={props.sortOrder} />

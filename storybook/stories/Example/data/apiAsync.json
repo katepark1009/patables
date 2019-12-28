@@ -1,0 +1,99 @@
+[{
+    "prop": "render",
+    "type": "Function",
+    "example": "(props) => {}",
+    "default": "",
+    "required": "true",
+    "link": ""
+},{
+    "prop": "url",
+    "type": "String",
+    "example": "https://myAPI.com/api/v1/resource",
+    "default": "",
+    "required": "true",
+    "link": ""
+},{
+    "prop": "apiKey",
+    "type": "Array",
+    "example": "['api_key', 'a1b2c3']",
+    "default": "",
+    "required": "",
+    "link": ""
+},{
+    "prop": "config",
+    "type": "Object",
+    "example": "{ headers: { key: 'value' } }",
+    "default": "",
+    "required": "",
+    "link": ""
+},{
+    "prop": "pageNeighbors",
+    "type": "Number",
+    "example": "3",
+    "default": 2,
+    "required": "",
+    "link": ""
+},{
+    "prop": "orderByParam",
+    "type": "Array",
+    "example": "['order_by', 'desc']",
+    "default": "",
+    "required": "",
+    "link": ""
+},{
+    "prop": "sortParam",
+    "type": "Array",
+    "example": "['sort_by', 'rating']",
+    "default": "",
+    "required": "",
+    "link": ""
+},{
+    "prop": "searchParam",
+    "type": "Array",
+    "example": "['query_term', 'foo']",
+    "default": "",
+    "required": "",
+    "link": ""
+},{
+    "prop": "pageParam",
+    "type": "Array",
+    "example": "['page_number', 1]",
+    "default": "",
+    "required": "",
+    "link": ""
+},{
+    "prop": "limitParam",
+    "type": "Array",
+    "example": "['limit', 5]",
+    "default": "",
+    "required": "",
+    "link": ""
+},{
+    "prop": "customParam",
+    "type": "Array",
+    "example": "[{ param: 'foo', value: 'bar' }]",
+    "default": "",
+    "required": "",
+    "link": ""
+},{
+    "prop": "pathToData",
+    "type": "Array",
+    "example": "['data', 'users']",
+    "default": "",
+    "required": "",
+    "link": ""
+},{
+    "prop": "pathToPageTotal",
+    "type": "Array",
+    "example": "['data', 'page_total']",
+    "default": "",
+    "required": "",
+    "link": ""
+},{
+    "prop": "showURI",
+    "type": "String",
+    "example": "true",
+    "default": "",
+    "required": "",
+    "link": ""
+}]

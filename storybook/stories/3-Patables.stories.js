@@ -2,7 +2,7 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import ExamplePatables from './Example/Example'
 
-const stories = storiesOf('PaTables', module)
+const stories = storiesOf('Patables', module)
 stories
   .add('Examples', () => {
     return (
